@@ -1,7 +1,10 @@
 <template>
-    <illustrations-view
-        :illustrations = 'illustrations'
-    ></illustrations-view>
+    <div>
+        <illustrations-view
+            :illustrations = 'illustrations'
+        ></illustrations-view>
+        <div v-observe-visibility="visibilityChanged"></div>
+    </div>
 </template>
 
 <script>
@@ -10,7 +13,7 @@ import { setTimeout } from 'timers';
         data() {
             return {
                 illustrations:[],
-                next_page_url:'/assets/illustration/8',
+                next_page_url:'/assets/illustration/4',
             };
         },
 
@@ -24,6 +27,7 @@ import { setTimeout } from 'timers';
 
         methods: {
             loadNextData(){
+                if(!this.next_page_url){return;}
                 let inst = this;
                 axios.get(this.next_page_url)
                 .then(function(response){
@@ -35,7 +39,13 @@ import { setTimeout } from 'timers';
                     alert('Could not reach the serve or load the data. Please check your connectivity. We are sorry for your inconvenience.')
                     console.log(error);
                 });
-            }
+            },
+
+            visibilityChanged (isVisible, entry) {
+                this.isVisible = isVisible
+                this.loadNextData();
+                console.log(entry)
+            },
         },
     }
 </script>

@@ -9,6 +9,9 @@ require('./bootstrap');
 window.Vue = require('vue');
 import VModal from 'vue-js-modal';
 import { Sketch } from 'vue-color';
+import VueObserveVisibility from 'vue-observe-visibility'
+
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -42,6 +45,7 @@ Vue.component('illustration-editor', require('./components/IllustrationEditor.vu
 Vue.component('sketch-picker', Sketch);
 
 Vue.use(VModal);
+Vue.use(VueObserveVisibility);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

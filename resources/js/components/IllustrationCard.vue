@@ -1,8 +1,8 @@
 <template>
-    <div class="col-sm-12 col-md-3 col-lg-2 col-xl-3">
+    <div class="col-sm-12 col-md-4 col-lg-3 col-xl-3">
         <a :href="redirectTo" target="_blank" style="text-decoration:none">
             <div class="ill-card mb-4 p-4 pt-3 text-center shadow-sm">
-                <div style="width:100%;height:200px" class="d-flex align-items-center justify-content-stretch"  v-html='svgData'></div>
+                <div style="width:100%;min-height:200px" class="d-flex align-items-center justify-content-stretch"  v-html='svgData'></div>
                 <p class="text-center m-0 calendar-text-dark">{{ title }}</p>
             </div>
         </a>

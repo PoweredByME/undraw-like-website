@@ -3,8 +3,8 @@
         <div class="row">
 
             <illustration-card
-                v-for="item in illustrations"
-                :key='item.id'
+                v-for="(item, index) in illustrations"
+                :key='index'
                 :svg='item.svg'
                 :title="item.title"
                 :redirectTo="item.redirectTo"
