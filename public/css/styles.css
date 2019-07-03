@@ -1,0 +1,120 @@
+body{
+    background: white;
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+body.no-scroll{
+    overflow-x:hidden;
+    overflow-y: hidden;
+}
+
+.calendar-bg-green{
+    background: #29c0b8;
+}
+
+.calendar-bg-light-green{
+    background: rgba(41, 192, 184, 0.3);
+}
+
+.calendar-bg-orange{
+    background: #fc8318;
+}
+.calendar-bg-blue{
+    background: #2171cd;
+}
+.calendar-bg-light-blue{
+    background: rgba(33, 113, 205, 0.2);
+}
+.calendar-bg-red{
+    background: #db2e70;
+}
+.calendar-bg-light-red{
+    background: #db2e7044;
+}
+.calendar-bg-dark{
+    background: #5b515a;
+}
+
+.calendar-text-green{
+    color: #29c0b8 !important;
+}
+.calendar-text-orange{
+    color: #fc8318 !important;
+}
+.calendar-text-blue{
+    color: #2171cd !important;
+}
+.calendar-text-red{
+    color: #db2e70 !important;
+}
+.calendar-text-dark{
+    color: #5b515a !important;
+}
+
+#navbar-id {
+    height:50px;
+/*border-bottom:3px solid */
+    background: white !important;
+}
+
+.nav-bottom-bar{
+    height: 5px;
+    background-image:linear-gradient(to right, #2171cd, #8967cb, #c657b5, #ee4d8f, #ff5763, #f6713e, #e18d1c, #c1a506, #94b43a, #67bc68, #3cc094, #29c0b8);
+}
+
+.dropdown-toggle-link:after {
+    content:none;
+}
+
+.dropdown-toggle-link {
+    font-size:24px;
+    color:#bccddf !important;
+    height:40px;
+    margin-bottom:14px;
+}
+
+.dropdown-toggle-link:focus {
+    border:none !important;
+    outline:none;
+    color:#899bb4 !important;
+}
+
+.dropdown-toggle-link:hover {
+    color:#899bb4 !important;
+}
+
+.nav-search-field:focus {
+    border:none !important;
+    outline:none !important;
+}
+
+.nav-search-field {
+    border:none !important;
+    outline:none !important;
+}
+
+.form-group.nav-search-field {
+    margin:0px;
+}
+
+
+.ill-hero-section{
+    height: 300px;
+    background-image:linear-gradient(to right, #2171cd, #8967cb, #c657b5, #ee4d8f, #ff5763, #f6713e, #e18d1c, #c1a506, #94b43a, #67bc68, #3cc094, #29c0b8);
+}
+
+.ihs-container p{
+    max-width: 600px;
+    width: auto;
+    font-weight: 300;
+}
+
+.ill-editor-root{
+    margin-top:-55px;
+}
+
+@media(max-width:992px){
+    .ill-editor-root{
+        margin-top:0px;
+    }
+}
