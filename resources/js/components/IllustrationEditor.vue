@@ -8,7 +8,7 @@
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
                     <div class="pl-2 pr-2 pb-5 ill-svg-container d-flex align-items-center justify-content-stretch">
-                        <div>
+                        <div class="pt-5">
                             <div class="mb-4">
                                 <h1>{{ item.title }}</h1>
                                 <h5 style="letter-spacing:2px;">Edit Or Download</h5>
@@ -28,7 +28,9 @@
                                         :class='["btn mr-2 mb-1", cs.color_id == selectedColorID ? "btn-dark" : " btn-outline-dark", "edit-btn-" + cs.color_id]'
                                         :edit-data="cs.color_id"
                                         @click = "onSelectColor(cs.color_id)"
-                                    >{{ cs.color_id }}</button>
+                                    >
+                                    <i class="fa fa-paint-brush mr-2"></i>
+                                    {{ cs.color_id }}</button>
                                 </div>
                                 <sketch-picker class="mt-3" v-model="colors"/>
                             </div>
@@ -37,7 +39,9 @@
                 </div>
             </div>
         </div>
-
+        <div v-else class="pt-5 pb-5 mt-5 container">
+            <h4 class="text-center">Loading <span style="letter-spacing:2px">Illustration</span> please wait. Thank you...</h4>
+        </div>
 
 </template>
 
@@ -54,10 +58,11 @@
             return {
                 item:null,
                 svg : null,
-                colors:'',
+                colors: {hex : "#324534"},
                 selectedColorID:'',
             };
         },
+
 
         mounted(){
             let inst = this;
@@ -66,6 +71,11 @@
                 inst.selectedColorID = response.data.color_slots[0] ? response.data.color_slots[0].color_id : '';
                 inst.item = response.data;
                 inst.svg = $(inst.item.svg).attr('width', '100%').attr('height','auto').prop('outerHTML');
+            }).then(function(){
+                inst.item.color_slots.forEach(element => {
+                    $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
+                });
+                inst.colors = {hex : $('.' + inst.selectedColorID).attr('fill')};
             })
             .catch(function(error){
                 alert('Could not reach the serve or load the data. Please check your connectivity. We are sorry for your inconvenience.')
@@ -76,12 +86,17 @@
         watch:{
             colors: function(newVal, oldVal){
                 $('.' + this.selectedColorID).attr('fill', newVal.hex8);
+                let inst = this;
+                inst.item.color_slots.forEach(element => {
+                    $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
+                });
             },
         },
 
         methods:{
             onSelectColor(color_id){
                 this.selectedColorID = color_id;
+                this.colors = {hex : $('.' + this.selectedColorID).attr('fill')};
             },
 
             save(type){
@@ -114,11 +129,13 @@
 
 <style>
     .ill-svg-container{
-        height:100vh;
+        min-height:100vh;
+        padding-top:24px;
     }
 
     @media (max-width:992px){
         .ill-svg-container{
+            min-height: auto;
             height:auto;
         }
     }

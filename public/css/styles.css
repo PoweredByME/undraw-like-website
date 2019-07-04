@@ -83,20 +83,6 @@ body.no-scroll{
     color:#899bb4 !important;
 }
 
-.nav-search-field:focus {
-    border:none !important;
-    outline:none !important;
-}
-
-.nav-search-field {
-    border:none !important;
-    outline:none !important;
-}
-
-.form-group.nav-search-field {
-    margin:0px;
-}
-
 
 .ill-hero-section{
     height: 300px;
@@ -113,8 +99,42 @@ body.no-scroll{
     margin-top:-55px;
 }
 
+.search-container{
+    display: block;
+}
+
+.search-input-container{
+    border-radius: 5px;
+    border: 1px solid #e9f2f9
+}
+
+.search-input-container button{
+    background: transparent;
+    border: none;
+}
+
+#search-input{
+    border:none;
+}
+
+.search-container.mobile{
+    display:none;
+}
+
 @media(max-width:992px){
     .ill-editor-root{
         margin-top:0px;
     }
 }
+
+@media(max-width:556px){
+    .search-container{
+        display: none;;
+    }
+
+    .search-container.mobile{
+        display:block;
+    }
+}
+
+

@@ -68,6 +68,23 @@ class CalendarController extends Controller
 
     }
 
+    public function getAgenda($slug){
+        $agenda = \App\Agenda::where('slug', $slug)->first();
+        abort_unless($agenda != null, 404);
+        $_agenda = [
+            'text' => $agenda->title,
+            'description' => $agenda->description,
+            'video' => $agenda->video == 1 ? true : false,
+            'videoURL' => $agenda->videoURL,
+            'videoBackgroundImage' => $agenda->videoBackgroundImage,
+            'redirectTo' => url('/agenda/'.$agenda->slug),
+            'videoBackgroundImageURL' => $agenda->videoBackgroundImageURL,
+        ];
+        //return $_agenda;
+        return view('calendarAgenda', ['agenda' => $_agenda]);
+    }
+
+
     public function getWeek($date){
         // INPUT : 'YYYY-MM-DD' : String
         $week = $this->_makeWeek($date);
@@ -112,5 +129,4 @@ class CalendarController extends Controller
         }
         return $month;
     }
-
 }

@@ -10,7 +10,8 @@
                                     ",
                                 'search' => false,
                                 'left_menu' => false,
-                                'right_menu' => false])
+                                'right_menu' => true,
+                                'home_link' => "/assets"])
     @endcomponent()
 
     <div style="min-height:100vh" id="app" class="ill-editor-root">

@@ -8,7 +8,7 @@
         >
 
             <template v-slot:showMonthlyButton>
-                <a href="#" @click.prevent="showMonthlyView" class="ml-2 pt-3 pb-3 pl-5 pr-5 calendar-share-btn"><i class="mr-2 fa fa-calendar"></i>
+                <a href="#" @click.prevent="showMonthlyView" class="pt-3 pb-3 pl-5 pr-5 calendar-share-btn"><i class="mr-2 fa fa-calendar"></i>
                     {{ showMonthlyViewBtnText }}
                 </a>
             </template>

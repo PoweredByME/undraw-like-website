@@ -29,12 +29,14 @@ Route::delete('/admin/illustration/catagory/{catagory_id}/{user_id}', 'AdminCont
 Route::get('/calendar', function(){return view('myCalendar');});
 Route::get('/calendar/week/{date}', 'CalendarController@getWeek');
 Route::get('/calendar/month/{date}', 'CalendarController@getMonth');
+Route::get('/agenda/{slug}', 'CalendarController@getAgenda');
 
 Route::get('/assets', function(){return view('Assets');});
 
 Route::get('/assets/illustration/{number_of_items}', 'IllustrationController@getIllustrations');
 Route::get('/illustration/{slug}', 'IllustrationController@showIllustration');
 Route::post('/illustration/{slug}', 'IllustrationController@fetchIllustration');
+Route::get('/illustration/search/{search}', 'IllustrationController@searchIllustration');
 
 
 

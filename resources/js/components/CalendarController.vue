@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="mb-3 col-sm-12 col-md-12 col-lg-4 col-xl-4">
-                <div class="d-flex align-items-center justify-content-end" style="height:100%">
+                <div class="showMonthlyButton-mobile d-flex align-items-center" style="height:100%">
                     <slot name="showMonthlyButton"></slot>
                 </div>
             </div>
@@ -52,7 +52,9 @@
         width:125px;
     }
 
-
+    .showMonthlyButton-mobile{
+        justify-content: end;
+    }
 
 
     .calendar-share-btn{
@@ -78,6 +80,26 @@
         .share-btn-container{
             margin-right:auto;
         }
+
+        .showMonthlyButton-mobile{
+           justify-content: center;
+        }
+
+        .prev-ctrl-btn{
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            width:60px;
+        }
+        .next-ctrl-btn{
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            width:60px;
+        }
+
+        .today-ctrl-btn{
+            width:95px;
+        }
+
     }
 
 </style>

@@ -55,6 +55,9 @@ Vue.use(VueObserveVisibility);
 
 const app = new Vue({
     el: '#app',
+    data : {
+        search_in:''
+    }
 });
 
 

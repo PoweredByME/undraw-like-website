@@ -21,7 +21,14 @@
 
         data() {
             return {
-                toShowClass: ''
+                toShowClass: '',
+            }
+        },
+
+        mounted(){
+            if(this.show){
+                this.toShowClass = 'show'
+                $('body').addClass('no-scroll');
             }
         },
 

@@ -34,7 +34,6 @@ class IllustrationController extends Controller
         $illustrations = [];
         $illustrationDB = \App\Illustration::paginate($number_of_items);
         foreach($illustrationDB as $ill){
-
             $illustrations[] = $this->_makeIllustration($ill);
         }
         return [
@@ -56,4 +55,23 @@ class IllustrationController extends Controller
         abort_unless($ill != null, 404);
         return $this->_makeIllustration($ill);
     }
+
+    public function searchIllustration($search){
+        $illustrations = [];
+        foreach(\App\Illustration::where('title', 'Like', '%'.$search.'%')->get() as $item){
+            $illustrations[] = $this->_makeIllustration($item);
+        }
+        foreach(\App\IllustrationKeyword::where('name', 'Like', '%'.$search.'%')->get() as $item){
+            $illustrations[] = $this->_makeIllustration($item->Illustration);
+        }
+        foreach(\App\IllustrationCatagory::where('name', 'Like', '%'.$search.'%')->get() as $item){
+            foreach($item->Illustration as $_item){
+                $illustrations[] = $this->_makeIllustration($_item);
+            }
+        }
+        return $illustrations;
+    }
+
+
+
 }
