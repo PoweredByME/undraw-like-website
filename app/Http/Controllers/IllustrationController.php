@@ -17,6 +17,9 @@ class IllustrationController extends Controller
             'keywords' => [],
             'redirectTo' => url('/illustration/'.$ill->slug),
         ];
+        $_illustration['color_slots'][] = [
+            'color_id' => 'color-all',
+        ];
         foreach($ill->IllustrationColorSlot as $item){
             $_illustration['color_slots'][] = [
                 'color_id' => $item->color_id,

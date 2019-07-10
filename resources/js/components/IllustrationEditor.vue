@@ -72,9 +72,9 @@
             let inst = this;
             axios.post(this.redirect_to)
             .then(function(response){
-                inst.selectedColorID = response.data.color_slots[0] ? response.data.color_slots[0].color_id : 'color-0';
+                inst.selectedColorID = response.data.color_slots[0] ? response.data.color_slots[0].color_id : 'color-all';
                 if(!response.data.color_slots[0]){
-                    response.data.color_slots = [ {color_id : 'color-0'} ];
+                    response.data.color_slots = [ {color_id : 'color-all'} ];
                 }
                 inst.item = response.data;
                 var svgItem = $(inst.item.svg);
@@ -105,7 +105,7 @@
                 let inst = this;
                 $('svg').find("*").each(function(){
                     var el = $('svg').find($(this));
-                    el.addClass('color-0');
+                    el.addClass('color-all');
                     el.addClass(_CSEN + _i);
                     el.click(function(){
                         inst.onSelectColor(el.attr('class').split(' ').pop());
