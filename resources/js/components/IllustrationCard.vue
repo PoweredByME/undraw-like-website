@@ -32,7 +32,12 @@
         },
 
         mounted(){
-            this.svgData = $(this.svg).attr('width', '100%').attr('height','auto').prop('outerHTML');
+            var svgItem = $(this.svg);
+            if(svgItem.length > 1){
+                svgItem = svgItem[svgItem.length - 1];
+                svgItem = $(svgItem);
+            }
+            this.svgData = svgItem.attr('width', '100%').attr('height','auto').prop('outerHTML');
         },
     }
 </script>

@@ -2573,7 +2573,14 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    this.svgData = $(this.svg).attr('width', '100%').attr('height', 'auto').prop('outerHTML');
+    var svgItem = $(this.svg);
+
+    if (svgItem.length > 1) {
+      svgItem = svgItem[svgItem.length - 1];
+      svgItem = $(svgItem);
+    }
+
+    this.svgData = svgItem.attr('width', '100%').attr('height', 'auto').prop('outerHTML');
   }
 });
 
@@ -2659,12 +2666,25 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var inst = this;
     axios.post(this.redirect_to).then(function (response) {
-      inst.selectedColorID = response.data.color_slots[0] ? response.data.color_slots[0].color_id : '';
+      inst.selectedColorID = response.data.color_slots[0] ? response.data.color_slots[0].color_id : 'color-0';
+
+      if (!response.data.color_slots[0]) {
+        response.data.color_slots = [{
+          color_id: 'color-0'
+        }];
+      }
+
       inst.item = response.data;
-      inst.svg = $(inst.item.svg).addClass('page-svg').attr('width', '100%').attr('height', 'auto').prop('outerHTML');
-      inst.item.color_slots = [inst.item.color_slots[0]];
-      inst.item.color_slots[0].color_id = 'color-entire-image';
-      inst.selectedColorID = inst.item.color_slots[0] ? inst.item.color_slots[0].color_id : '';
+      var svgItem = $(inst.item.svg);
+
+      if (svgItem.length > 1) {
+        svgItem = svgItem[svgItem.length - 1];
+        svgItem = $(svgItem);
+      }
+
+      inst.svg = svgItem.attr('width', '100%').attr('height', 'auto').prop('outerHTML'); //inst.item.color_slots = [ inst.item.color_slots[0] ];
+      //inst.item.color_slots[0].color_id = 'color-entire-image';
+      //inst.selectedColorID = inst.item.color_slots[0] ? inst.item.color_slots[0].color_id : '';
     }).then(function () {
       inst.item.color_slots.forEach(function (element) {
         $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
@@ -2682,9 +2702,9 @@ __webpack_require__.r(__webpack_exports__);
       var _i = 1;
       var _CSEN = 'element-';
       var inst = this;
-      $('.page-svg').children().each(function () {
-        var el = $('.page-svg').find($(this));
-        el.addClass('color-entire-image');
+      $('svg').find("*").each(function () {
+        var el = $('svg').find($(this));
+        el.addClass('color-0');
         el.addClass(_CSEN + _i);
         el.click(function () {
           inst.onSelectColor(el.attr('class').split(' ').pop());
@@ -2696,7 +2716,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     colors: function colors(newVal, oldVal) {
-      $('.' + this.selectedColorID).attr('fill', newVal.hex8);
+      $('.' + this.selectedColorID).attr('fill', newVal.hex8).find('*').each(function () {
+        $('svg').find($(this)).attr('fill', newVal.hex8);
+      });
       var inst = this;
       inst.item.color_slots.forEach(function (element) {
         $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
