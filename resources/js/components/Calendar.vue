@@ -28,24 +28,25 @@
             <div class="row">
 
                 <div
-                    class="col-sm-12 col-md-4 col-lg-3 col-xl-3 p-2 day-container calendar-bg-light-green"
-                    style="height:auto"
+                    class="col-sm-12 col-md-4 col-lg-3 col-xl-3 mb-3 pl-3 pr-3"
                     v-for="item in search_data"
                     :key = "item.id"
                     :text = "item.text"
                 >
-                    <div class="mb-4">
-                        <p class="text-center mb-1 calendar-text-dark" style="opacity:0.7">{{ item.day }}</p>
-                        <h5 class="text-center calendar-text-dark">{{ item.month }} {{ item.date }}, {{ item.year }}</h5>
+                    <div class="p-2 day-container calendar-bg-light-green" style="height:auto">
+                        <div class="mb-4">
+                            <p class="text-center mb-1 calendar-text-dark" style="opacity:0.7">{{ item.day }}</p>
+                            <h5 class="text-center calendar-text-dark">{{ item.month }} {{ item.date }}, {{ item.year }}</h5>
+                        </div>
+                        <day-card
+                            :videoBackgroundImage="item.agenda.videoBackgroundImage"
+                            :videoBackgroundImageURL="item.agenda.videoBackgroundImageURL"
+                            :video="item.agenda.video"
+                            :redirectTo="item.agenda.redirectTo"
+                            :description="item.agenda.description"
+                            :videoURL="item.agenda.videoURL"
+                        />
                     </div>
-                    <day-card
-                        :videoBackgroundImage="item.agenda.videoBackgroundImage"
-                        :videoBackgroundImageURL="item.agenda.videoBackgroundImageURL"
-                        :video="item.agenda.video"
-                        :redirectTo="item.agenda.redirectTo"
-                        :description="item.agenda.description"
-                        :videoURL="item.agenda.videoURL"
-                    />
                 </div>
 
             </div>

@@ -1893,6 +1893,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     search_in: ''
@@ -39484,49 +39485,60 @@ var render = function() {
                   {
                     key: item.id,
                     staticClass:
-                      "col-sm-12 col-md-4 col-lg-3 col-xl-3 p-2 day-container calendar-bg-light-green",
-                    staticStyle: { height: "auto" },
+                      "col-sm-12 col-md-4 col-lg-3 col-xl-3 mb-3 pl-3 pr-3",
                     attrs: { text: item.text }
                   },
                   [
-                    _c("div", { staticClass: "mb-4" }, [
-                      _c(
-                        "p",
-                        {
-                          staticClass: "text-center mb-1 calendar-text-dark",
-                          staticStyle: { opacity: "0.7" }
-                        },
-                        [_vm._v(_vm._s(item.day))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "h5",
-                        { staticClass: "text-center calendar-text-dark" },
-                        [
-                          _vm._v(
-                            _vm._s(item.month) +
-                              " " +
-                              _vm._s(item.date) +
-                              ", " +
-                              _vm._s(item.year)
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "p-2 day-container calendar-bg-light-green",
+                        staticStyle: { height: "auto" }
+                      },
+                      [
+                        _c("div", { staticClass: "mb-4" }, [
+                          _c(
+                            "p",
+                            {
+                              staticClass:
+                                "text-center mb-1 calendar-text-dark",
+                              staticStyle: { opacity: "0.7" }
+                            },
+                            [_vm._v(_vm._s(item.day))]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "h5",
+                            { staticClass: "text-center calendar-text-dark" },
+                            [
+                              _vm._v(
+                                _vm._s(item.month) +
+                                  " " +
+                                  _vm._s(item.date) +
+                                  ", " +
+                                  _vm._s(item.year)
+                              )
+                            ]
                           )
-                        ]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("day-card", {
-                      attrs: {
-                        videoBackgroundImage: item.agenda.videoBackgroundImage,
-                        videoBackgroundImageURL:
-                          item.agenda.videoBackgroundImageURL,
-                        video: item.agenda.video,
-                        redirectTo: item.agenda.redirectTo,
-                        description: item.agenda.description,
-                        videoURL: item.agenda.videoURL
-                      }
-                    })
-                  ],
-                  1
+                        ]),
+                        _vm._v(" "),
+                        _c("day-card", {
+                          attrs: {
+                            videoBackgroundImage:
+                              item.agenda.videoBackgroundImage,
+                            videoBackgroundImageURL:
+                              item.agenda.videoBackgroundImageURL,
+                            video: item.agenda.video,
+                            redirectTo: item.agenda.redirectTo,
+                            description: item.agenda.description,
+                            videoURL: item.agenda.videoURL
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
                 )
               }),
               0
