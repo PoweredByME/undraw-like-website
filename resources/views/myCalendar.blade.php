@@ -4,18 +4,20 @@
 
 @section('content')
 
-    @component('Master.navbar', ['title' => "
-                                        <span style='font-weight:600;letter-spacing:2px'>DESIGN.AI</span>
-                                        <span> | </span>
-                                        <span>Calendar</span>
-                                    ",
-                                'search' => false,
-                                'left_menu' => false,
-                                'right_menu' => false])
-    @endcomponent()
+
 
     <div id="app">
-        <calendar-component></calendar-component>
+            @component('Master.navbar', ['title' => "
+                    <img width='76' src='webAssets/images/logo.svg'>
+                    <span class='pl-1 pr-1'> | </span>
+                    <span>Calendar</span>
+                ",
+                'search' => true,
+                'search_title' => 'Events',
+                'left_menu' => false,
+                'right_menu' => false])
+            @endcomponent()
+        <calendar-component :search_in = 'search_in'></calendar-component>
     </div>
 
     @component('Master.footerSmall')

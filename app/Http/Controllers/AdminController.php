@@ -25,10 +25,7 @@ class AdminController extends Controller
     }
 
     public function show($user_id){
-
         $loggedInUser = $this->verifyUser($user_id);
-
-
         //dd($users);
         return view('admin.home', [
             'loggedInUser' => $loggedInUser,
@@ -83,6 +80,15 @@ class AdminController extends Controller
             $agenda->video = true;
             $agenda->videoBackgroundImageURL = request()->videoBackgroundImageURL;
             $agenda->save();
+        }
+
+        for($i=0;$i<5;$i++){
+            if(request()->get('keyword_'.$i) != null){
+                \App\agendaKeyword::create([
+                    'agenda_id' => $agenda->id,
+                    'name' => request()->get('keyword_'.$i),
+                ]);
+            }
         }
 
         request()->session()->flash('success', 'New agenda has been created ('.$data["date"].')');

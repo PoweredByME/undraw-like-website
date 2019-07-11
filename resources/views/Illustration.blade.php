@@ -4,8 +4,8 @@
 
 @section('content')
     @component('Master.navbar', ['title' => "
-                                        <span style='font-weight:600;letter-spacing:2px'>DESIGN.AI</span>
-                                        <span> | </span>
+                                        <img width='76' src='webAssets/images/logo.svg'>
+                                        <span class='pl-1 pr-1'> | </span>
                                         <span>Illustrations</span>
                                     ",
                                 'search' => false,

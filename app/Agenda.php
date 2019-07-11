@@ -32,4 +32,8 @@ class Agenda extends Model
         ];
     }
 
+    public function agendaKeyword(){
+        return $this->hasMany(\App\agendaKeyword::class);
+    }
+
 }

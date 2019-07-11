@@ -121,6 +121,25 @@ body.no-scroll{
     display:none;
 }
 
+.ill-fab-container{
+    position : fixed;
+    bottom : 0;
+    right : 0;
+}
+
+.ill-fab-btn{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    width: 56px;
+    outline: none;
+    border: none;
+    background: white;
+    border-radius: 100px;
+}
+
 @media(max-width:992px){
     .ill-editor-root{
         margin-top:0px;

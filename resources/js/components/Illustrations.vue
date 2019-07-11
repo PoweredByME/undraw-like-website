@@ -10,6 +10,36 @@
             <h4 class="text-center">Loading <span style="letter-spacing:2px">Illustration</span> please wait. Thank you...</h4>
         </div>
         <div v-observe-visibility="visibilityChanged"></div>
+
+        <div class="ill-fab-container pb-4 pr-4">
+            <div class="d-flex align-items-center justify-content-end">
+                <button class="ill-fab-btn shadow" @click="() => {this.showEditColors = !this.showEditColors}">
+                    <i v-if="!showEditColors" class="fa fa-edit ill-fab-btn-icon"/>
+                    <i v-else class="fa fa-close ill-fab-btn-icon"/>
+                </button>
+            </div>
+            <sketch-picker v-if="showEditColors" class="mt-3" v-model="colors" :presetColors="[
+                                                                                            '#ffffff',
+                                                                                            '#f3ec3a',
+                                                                                            '#f9bd17',
+                                                                                            '#f99b1d',
+                                                                                            '#f15523',
+                                                                                            '#ef3124',
+                                                                                            '#DE0081',
+                                                                                            '#a71e48',
+                                                                                            '#7c3597',
+                                                                                            '#463191',
+                                                                                            '#000000',
+                                                                                            '#3d5dac',
+                                                                                            '#1296ce',
+                                                                                            '#63b145',
+                                                                                            '#19BC81',
+                                                                                            '#d0dd36',
+                                                                                            ]"
+            />
+        </div>
+
+
     </div>
 </template>
 
@@ -24,6 +54,8 @@ import { setTimeout } from 'timers';
         },
         data() {
             return {
+                showEditColors : false,
+                colors:'',
                 illustrations:[],
                 next_page_url:'/assets/illustration/5',
             };
@@ -87,6 +119,10 @@ import { setTimeout } from 'timers';
                 }else{
                     this.searchIllustration();
                 }
+            },
+
+            colors : function(newVal, oldVal){
+                $(".color-0").attr('fill', newVal.hex8);
             }
         },
     }

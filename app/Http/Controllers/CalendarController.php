@@ -110,4 +110,19 @@ class CalendarController extends Controller
         }
         return $month;
     }
+
+    public function searchAgenda($search){
+        $agendas = [];
+        foreach(\App\agendaKeyword::where('name', 'Like', '%'.$search.'%')->get() as $item){
+            $carbon = new Carbon($item->Agenda->Day->date);
+            $agendas[] = [
+                'agenda' => $this->_makeAgenda($item->Agenda),
+                'date' => $carbon->day,
+                'month' => $carbon->englishMonth,
+                'day' => $carbon->englishDayOfWeek,
+                'year' => $carbon->year,
+            ];
+        }
+        return $agendas;
+    }
 }

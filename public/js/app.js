@@ -1867,7 +1867,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    search_in: ''
+  },
   computed: {
     today: function today() {
       var date = new Date();
@@ -1883,7 +1912,8 @@ __webpack_require__.r(__webpack_exports__);
       month: null,
       MM_YYYY: null,
       showMonthly: false,
-      showMonthlyViewBtnText: 'Monthly View'
+      showMonthlyViewBtnText: 'Monthly View',
+      search_data: null
     };
   },
   created: function created() {
@@ -1998,6 +2028,18 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         inst.MM_YYYY = showMonth + ' ' + showYear;
+      })["catch"](function (error) {
+        alert('Could not reach the serve or load the data. Please check your connectivity. We are sorry for your inconvenience.');
+        console.log(error);
+      });
+    }
+  },
+  watch: {
+    search_in: function search_in(newVal, oldVal) {
+      if (newVal.length < 1) return;
+      var inst = this;
+      axios.get('/agenda/search/' + newVal).then(function (response) {
+        inst.search_data = response.data;
       })["catch"](function (error) {
         alert('Could not reach the serve or load the data. Please check your connectivity. We are sorry for your inconvenience.');
         console.log(error);
@@ -2645,6 +2687,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     redirect_to: {
@@ -2666,14 +2727,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var inst = this;
     axios.post(this.redirect_to).then(function (response) {
-      inst.selectedColorID = response.data.color_slots[0] ? response.data.color_slots[0].color_id : 'color-all';
-
-      if (!response.data.color_slots[0]) {
-        response.data.color_slots = [{
-          color_id: 'color-all'
-        }];
-      }
-
+      inst.selectedColorID = '';
       inst.item = response.data;
       var svgItem = $(inst.item.svg);
 
@@ -2689,9 +2743,17 @@ __webpack_require__.r(__webpack_exports__);
       inst.item.color_slots.forEach(function (element) {
         $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
       });
-      inst.colors = {
-        hex: $('.' + inst.selectedColorID).attr('fill')
-      };
+
+      if (inst.selectedColorID != '') {
+        inst.colors = {
+          hex: $('.' + inst.selectedColorID).attr('fill')
+        };
+      }
+
+      inst.item.color_slots.forEach(function (element) {
+        $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
+        $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
+      });
     })["catch"](function (error) {
       alert('Could not reach the serve or load the data. Please check your connectivity. We are sorry for your inconvenience.');
       console.log(error);
@@ -2722,6 +2784,7 @@ __webpack_require__.r(__webpack_exports__);
       var inst = this;
       inst.item.color_slots.forEach(function (element) {
         $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
+        $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
       });
     }
   },
@@ -2788,6 +2851,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2798,6 +2891,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      showEditColors: false,
+      colors: '',
       illustrations: [],
       next_page_url: '/assets/illustration/5'
     };
@@ -2849,6 +2944,9 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.searchIllustration();
       }
+    },
+    colors: function colors(newVal, oldVal) {
+      $(".color-0").attr('fill', newVal.hex8);
     }
   }
 });
@@ -39314,55 +39412,128 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("calendar-controller", {
-        attrs: {
-          prevBtnClicked: _vm.prevBtnClicked,
-          nextBtnClicked: _vm.nextBtnClicked,
-          todayBtnClicked: _vm.todayBtnClicked,
-          calendar_MM_YYYY: _vm.MM_YYYY
+  return _vm.search_in.length < 1
+    ? _c(
+        "div",
+        [
+          _c("calendar-controller", {
+            attrs: {
+              prevBtnClicked: _vm.prevBtnClicked,
+              nextBtnClicked: _vm.nextBtnClicked,
+              todayBtnClicked: _vm.todayBtnClicked,
+              calendar_MM_YYYY: _vm.MM_YYYY
+            },
+            scopedSlots: _vm._u(
+              [
+                {
+                  key: "showMonthlyButton",
+                  fn: function() {
+                    return [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "pt-3 pb-3 pl-5 pr-5 calendar-share-btn",
+                          attrs: { href: "#" },
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.showMonthlyView($event)
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "mr-2 fa fa-calendar" }),
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.showMonthlyViewBtnText) +
+                              "\n            "
+                          )
+                        ]
+                      )
+                    ]
+                  },
+                  proxy: true
+                }
+              ],
+              null,
+              false,
+              2110587097
+            )
+          }),
+          _vm._v(" "),
+          !_vm.showMonthly
+            ? _c("calendar-weekly", { attrs: { week: _vm.week } })
+            : _c("calendar-monthly", { attrs: { month: _vm.month } })
+        ],
+        1
+      )
+    : _c(
+        "div",
+        {
+          staticClass: "mt-5 mb-5",
+          staticStyle: { "min-height": "100vh", width: "100vw" }
         },
-        scopedSlots: _vm._u([
-          {
-            key: "showMonthlyButton",
-            fn: function() {
-              return [
-                _c(
-                  "a",
+        [
+          _c("div", { staticClass: "container" }, [
+            _c(
+              "div",
+              { staticClass: "row" },
+              _vm._l(_vm.search_data, function(item) {
+                return _c(
+                  "div",
                   {
-                    staticClass: "pt-3 pb-3 pl-5 pr-5 calendar-share-btn",
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.showMonthlyView($event)
-                      }
-                    }
+                    key: item.id,
+                    staticClass:
+                      "col-sm-12 col-md-4 col-lg-3 col-xl-3 p-2 day-container calendar-bg-light-green",
+                    staticStyle: { height: "auto" },
+                    attrs: { text: item.text }
                   },
                   [
-                    _c("i", { staticClass: "mr-2 fa fa-calendar" }),
-                    _vm._v(
-                      "\n                " +
-                        _vm._s(_vm.showMonthlyViewBtnText) +
-                        "\n            "
-                    )
-                  ]
+                    _c("div", { staticClass: "mb-4" }, [
+                      _c(
+                        "p",
+                        {
+                          staticClass: "text-center mb-1 calendar-text-dark",
+                          staticStyle: { opacity: "0.7" }
+                        },
+                        [_vm._v(_vm._s(item.day))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "h5",
+                        { staticClass: "text-center calendar-text-dark" },
+                        [
+                          _vm._v(
+                            _vm._s(item.month) +
+                              " " +
+                              _vm._s(item.date) +
+                              ", " +
+                              _vm._s(item.year)
+                          )
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("day-card", {
+                      attrs: {
+                        videoBackgroundImage: item.agenda.videoBackgroundImage,
+                        videoBackgroundImageURL:
+                          item.agenda.videoBackgroundImageURL,
+                        video: item.agenda.video,
+                        redirectTo: item.agenda.redirectTo,
+                        description: item.agenda.description,
+                        videoURL: item.agenda.videoURL
+                      }
+                    })
+                  ],
+                  1
                 )
-              ]
-            },
-            proxy: true
-          }
-        ])
-      }),
-      _vm._v(" "),
-      !_vm.showMonthly
-        ? _c("calendar-weekly", { attrs: { week: _vm.week } })
-        : _c("calendar-monthly", { attrs: { month: _vm.month } })
-    ],
-    1
-  )
+              }),
+              0
+            )
+          ])
+        ]
+      )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -40248,7 +40419,12 @@ var render = function() {
                 staticClass:
                   "ill-svg-container d-flex align-items-center justify-content-center p-2 pt-5 pb-5"
               },
-              [_c("div", { domProps: { innerHTML: _vm._s(_vm.svg) } })]
+              [
+                _c("div", {
+                  staticStyle: { cursor: "pointer" },
+                  domProps: { innerHTML: _vm._s(_vm.svg) }
+                })
+              ]
             )
           ]),
           _vm._v(" "),
@@ -40262,11 +40438,7 @@ var render = function() {
               [
                 _c("div", { staticClass: "pt-5" }, [
                   _c("div", { staticClass: "mb-4" }, [
-                    _c("h1", [_vm._v(_vm._s(_vm.item.title))]),
-                    _vm._v(" "),
-                    _c("h5", { staticStyle: { "letter-spacing": "2px" } }, [
-                      _vm._v("Edit Or Download")
-                    ])
+                    _c("h1", [_vm._v(_vm._s(_vm.item.title))])
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "mb-3" }, [
@@ -40310,8 +40482,6 @@ var render = function() {
                     [
                       _vm._m(0),
                       _vm._v(" "),
-                      _vm._m(1),
-                      _vm._v(" "),
                       _c(
                         "div",
                         _vm._l(_vm.item.color_slots, function(cs) {
@@ -40337,26 +40507,46 @@ var render = function() {
                               _c("i", {
                                 staticClass: "fa fa-paint-brush mr-2"
                               }),
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(cs.color_id)
-                              )
+                              _vm._v(" "),
+                              _c("span", [_vm._v(_vm._s(cs.color_id))])
                             ]
                           )
                         }),
                         0
                       ),
                       _vm._v(" "),
-                      _c("sketch-picker", {
-                        staticClass: "mt-3",
-                        model: {
-                          value: _vm.colors,
-                          callback: function($$v) {
-                            _vm.colors = $$v
-                          },
-                          expression: "colors"
-                        }
-                      })
+                      _vm.selectedColorID.length > 0
+                        ? _c("sketch-picker", {
+                            staticClass: "mt-3",
+                            attrs: {
+                              presetColors: [
+                                "#ffffff",
+                                "#f3ec3a",
+                                "#f9bd17",
+                                "#f99b1d",
+                                "#f15523",
+                                "#ef3124",
+                                "#DE0081",
+                                "#a71e48",
+                                "#7c3597",
+                                "#463191",
+                                "#000000",
+                                "#3d5dac",
+                                "#1296ce",
+                                "#63b145",
+                                "#19BC81",
+                                "#d0dd36"
+                              ]
+                            },
+                            model: {
+                              value: _vm.colors,
+                              callback: function($$v) {
+                                _vm.colors = $$v
+                              },
+                              expression: "colors"
+                            }
+                          })
+                        : _vm._e()
                     ],
                     1
                   )
@@ -40366,45 +40556,16 @@ var render = function() {
           ])
         ])
       ])
-    : _c("div", { staticClass: "pt-5 pb-5 mt-5 container" }, [_vm._m(2)])
+    : _c("div", { staticClass: "pt-5 pb-5 mt-5 container" })
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("h4", [
+    return _c("h4", { staticClass: "mb-2" }, [
       _c("i", { staticClass: "fa fa-edit mr-2" }),
       _vm._v("Edit Colors")
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("p", [
-      _vm._v(
-        "Please click on any part of the image to color it. Please, click the button below to color the entire image.\n                            "
-      ),
-      _c("br"),
-      _vm._v(" "),
-      _c("strong", [
-        _vm._v(
-          "NOTE : The button to color the entire image is already selected."
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("h4", { staticClass: "text-center" }, [
-      _vm._v("Loading "),
-      _c("span", { staticStyle: { "letter-spacing": "2px" } }, [
-        _vm._v("Illustration")
-      ]),
-      _vm._v(" please wait. Thank you...")
     ])
   }
 ]
@@ -40426,6 +40587,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
 var render = function() {
+  var this$1 = this
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
@@ -40465,7 +40627,70 @@ var render = function() {
             expression: "visibilityChanged"
           }
         ]
-      })
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "ill-fab-container pb-4 pr-4" },
+        [
+          _c(
+            "div",
+            { staticClass: "d-flex align-items-center justify-content-end" },
+            [
+              _c(
+                "button",
+                {
+                  staticClass: "ill-fab-btn shadow",
+                  on: {
+                    click: function() {
+                      this$1.showEditColors = !this$1.showEditColors
+                    }
+                  }
+                },
+                [
+                  !_vm.showEditColors
+                    ? _c("i", { staticClass: "fa fa-edit ill-fab-btn-icon" })
+                    : _c("i", { staticClass: "fa fa-close ill-fab-btn-icon" })
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _vm.showEditColors
+            ? _c("sketch-picker", {
+                staticClass: "mt-3",
+                attrs: {
+                  presetColors: [
+                    "#ffffff",
+                    "#f3ec3a",
+                    "#f9bd17",
+                    "#f99b1d",
+                    "#f15523",
+                    "#ef3124",
+                    "#DE0081",
+                    "#a71e48",
+                    "#7c3597",
+                    "#463191",
+                    "#000000",
+                    "#3d5dac",
+                    "#1296ce",
+                    "#63b145",
+                    "#19BC81",
+                    "#d0dd36"
+                  ]
+                },
+                model: {
+                  value: _vm.colors,
+                  callback: function($$v) {
+                    _vm.colors = $$v
+                  },
+                  expression: "colors"
+                }
+              })
+            : _vm._e()
+        ],
+        1
+      )
     ],
     1
   )

@@ -6,17 +6,18 @@
 
     <div id="app" style="min-height:100vh">
         @component('Master.navbar', ['title' => "
-                                    <span style='font-weight:600;letter-spacing:2px'>DESIGN.AI</span>
-                                    <span> | </span>
+                                    <img width='76' src='webAssets/images/logo.svg'>
+                                    <span class='pl-1 pr-1'> | </span>
                                     <span>Illustrations</span>
                                 ",
                             'search' => true,
+                            'search_title' => 'Illustrations',
                             'left_menu' => false,
                             'right_menu' => false])
         @endcomponent()
 
-        <section class="shadow-sm ill-hero-section p-3 d-flex align-items-center justify-content-center">
-                <div class="ihs-container mb-1 text-white text-center">
+        <section class=" ill-hero-section p-3 d-flex align-items-center justify-content-center" style="background:white !important">
+                <div class="ihs-container mb-1 text-black text-center">
                     <h3 style="letter-spacing: 2px">
                         <i class="fa fa-image"></i>
                         ILLUSTRATIONS

@@ -3,7 +3,7 @@
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
                     <div class="ill-svg-container d-flex align-items-center justify-content-center p-2 pt-5 pb-5">
-                        <div v-html='svg'></div>
+                        <div style="cursor:pointer" v-html='svg'></div>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
@@ -11,18 +11,18 @@
                         <div class="pt-5">
                             <div class="mb-4">
                                 <h1>{{ item.title }}</h1>
-                                <h5 style="letter-spacing:2px;">Edit Or Download</h5>
+                                <!--<h5 style="letter-spacing:2px;">Edit Or Download</h5>-->
                             </div>
                             <div class="mb-3">
                                 <button @click="save('SVG')" role="btn" class="btn btn-outline-dark mr-2 mb-2"><i class="fa fa-download mr-2"></i>Download SVG</button>
                                 <button @click="save('PNG')" role="btn" class="btn btn-outline-dark mr-2 mb-2"><i class="fa fa-download mr-2"></i>Download PNG</button>
                             </div>
                             <div>
-                                <h4><i class="fa fa-edit mr-2"></i>Edit Colors</h4>
-                                <p>Please click on any part of the image to color it. Please, click the button below to color the entire image.
+                                <h4 class="mb-2"><i class="fa fa-edit mr-2"></i>Edit Colors</h4>
+                                <!--<p>Please click on any part of the image to color it. Please, click the button below to color the entire image.
                                     <br>
                                     <strong>NOTE : The button to color the entire image is already selected.</strong>
-                                </p>
+                                </p>-->
                                 <div>
                                     <button
                                         role="btn"
@@ -33,9 +33,28 @@
                                         @click = "onSelectColor(cs.color_id)"
                                     >
                                     <i class="fa fa-paint-brush mr-2"></i>
-                                    {{ cs.color_id }}</button>
+                                    <span>{{ cs.color_id }}</span>
+                                    </button>
                                 </div>
-                                <sketch-picker class="mt-3" v-model="colors"/>
+                                <sketch-picker v-if="selectedColorID.length > 0" class="mt-3" v-model="colors" :presetColors="[
+                                                                                            '#ffffff',
+                                                                                            '#f3ec3a',
+                                                                                            '#f9bd17',
+                                                                                            '#f99b1d',
+                                                                                            '#f15523',
+                                                                                            '#ef3124',
+                                                                                            '#DE0081',
+                                                                                            '#a71e48',
+                                                                                            '#7c3597',
+                                                                                            '#463191',
+                                                                                            '#000000',
+                                                                                            '#3d5dac',
+                                                                                            '#1296ce',
+                                                                                            '#63b145',
+                                                                                            '#19BC81',
+                                                                                            '#d0dd36',
+                                                                                            ]"
+                                />
                             </div>
                         </div>
                     </div>
@@ -43,7 +62,7 @@
             </div>
         </div>
         <div v-else class="pt-5 pb-5 mt-5 container">
-            <h4 class="text-center">Loading <span style="letter-spacing:2px">Illustration</span> please wait. Thank you...</h4>
+            <!--<h4 class="text-center">Loading <span style="letter-spacing:2px">Illustration</span> please wait. Thank you...</h4>-->
         </div>
 
 </template>
@@ -72,10 +91,7 @@
             let inst = this;
             axios.post(this.redirect_to)
             .then(function(response){
-                inst.selectedColorID = response.data.color_slots[0] ? response.data.color_slots[0].color_id : 'color-all';
-                if(!response.data.color_slots[0]){
-                    response.data.color_slots = [ {color_id : 'color-all'} ];
-                }
+                inst.selectedColorID = '';
                 inst.item = response.data;
                 var svgItem = $(inst.item.svg);
                 if(svgItem.length > 1){
@@ -90,7 +106,13 @@
                 inst.item.color_slots.forEach(element => {
                     $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
                 });
-                inst.colors = {hex : $('.' + inst.selectedColorID).attr('fill')};
+                if(inst.selectedColorID != ''){
+                    inst.colors = {hex : $('.' + inst.selectedColorID).attr('fill')};
+                }
+                inst.item.color_slots.forEach(element => {
+                    $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
+                    $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
+                });
             })
             .catch(function(error){
                 alert('Could not reach the serve or load the data. Please check your connectivity. We are sorry for your inconvenience.')
@@ -125,6 +147,7 @@
                 let inst = this;
                 inst.item.color_slots.forEach(element => {
                     $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
+                    $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
                 });
             },
         },

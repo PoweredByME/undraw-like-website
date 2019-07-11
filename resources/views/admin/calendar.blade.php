@@ -7,6 +7,7 @@
         @component('Master.onSuccessFlashMessage')
         @endcomponent()
         <v-modal name="New Agenda" title="Add a New Agenda" button_title="Add New Agenda">
+            <div style="height:500px;overflow-y:auto">
                 <form method="post" enctype="multipart/form-data" id="add-new-agenda" class="mt-1" action="/admin/calendar/agenda/{{ $loggedInUser->id }}">
                     @csrf
                     <p class="m-0">Pick a date</p>
@@ -20,9 +21,14 @@
                     <p class="m-0 mt-2">Images video background URL</p>
                     <input type="text" name="videoBackgroundImageURL"  placeholder="Enter the video Background Image URL" class="form-control" />
                     <p class="mb-1 mt-1">Images video background</p>
-                    <input type="file" name="videoBackgroundImage"  accept="image/*" /></form>
-
+                    <input type="file" name="videoBackgroundImage"  accept="image/*" />
+                    <h4 class="mt-3">Event Keywords</h4>
+                    <p class="mb-1">Please enter 5 keywords for the Illustration</p>
+                    @for($i=0;$i<5;$i++)
+                        <input type="text" name="keyword_{{ $i }}" placeholder="Enter the keyword {{ $i }}" class="mb-2 form-control"/>
+                    @endfor
                 </form>
+            </div>
             <template v-slot:footer>
                 <button role="btn" class="btn btn-primary" onclick="
                     var form = document.getElementById('add-new-agenda');
@@ -55,6 +61,11 @@
                                         <p class="m-0">Video URL : {{ $agenda->videoURL }}</p>
                                         <a href="{{ $agenda->videoBackgroundImage }}" target="_blank">View video background image.</a>
                                     @endif
+                                    <p class="m-0">Keywords :
+                                            @foreach($agenda->agendaKeyword as $item)
+                                                {{ $item->name }},&nbsp
+                                            @endforeach
+                                    </p>
                                 </div>
                             </div>
                             <template v-slot:buttons>

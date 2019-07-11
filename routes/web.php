@@ -30,6 +30,7 @@ Route::get('/calendar', function(){return view('myCalendar');});
 Route::get('/calendar/week/{date}', 'CalendarController@getWeek');
 Route::get('/calendar/month/{date}', 'CalendarController@getMonth');
 Route::get('/agenda/{slug}', 'CalendarController@getAgenda');
+Route::get('/agenda/search/{search}', 'CalendarController@searchAgenda');
 
 Route::get('/assets', function(){return view('Assets');});
 

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="search_in.length < 1">
         <calendar-controller
             :prevBtnClicked='prevBtnClicked'
             :nextBtnClicked='nextBtnClicked'
@@ -22,14 +22,43 @@
             v-else
             :month='month'
         ></calendar-monthly>
+    </div>
+    <div v-else style="min-height:100vh;width:100vw" class="mt-5 mb-5">
+        <div class="container">
+            <div class="row">
 
+                <div
+                    class="col-sm-12 col-md-4 col-lg-3 col-xl-3 p-2 day-container calendar-bg-light-green"
+                    style="height:auto"
+                    v-for="item in search_data"
+                    :key = "item.id"
+                    :text = "item.text"
+                >
+                    <div class="mb-4">
+                        <p class="text-center mb-1 calendar-text-dark" style="opacity:0.7">{{ item.day }}</p>
+                        <h5 class="text-center calendar-text-dark">{{ item.month }} {{ item.date }}, {{ item.year }}</h5>
+                    </div>
+                    <day-card
+                        :videoBackgroundImage="item.agenda.videoBackgroundImage"
+                        :videoBackgroundImageURL="item.agenda.videoBackgroundImageURL"
+                        :video="item.agenda.video"
+                        :redirectTo="item.agenda.redirectTo"
+                        :description="item.agenda.description"
+                        :videoURL="item.agenda.videoURL"
+                    />
+                </div>
 
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
     export default {
 
+        props:{
+            search_in: '',
+        },
 
         computed: {
             today : function(){
@@ -47,7 +76,8 @@
                 month: null,
                 MM_YYYY : null,
                 showMonthly : false,
-                showMonthlyViewBtnText : 'Monthly View'
+                showMonthlyViewBtnText : 'Monthly View',
+                search_data:null,
             }
         },
 
@@ -174,6 +204,21 @@
                 });
             }
 
+        },
+
+        watch : {
+            search_in : function(newVal, oldVal){
+                if(newVal.length < 1) return;
+                let inst = this;
+                axios.get('/agenda/search/' + newVal)
+                .then(function(response){
+                    inst.search_data = response.data;
+                })
+                .catch(function(error){
+                    alert('Could not reach the serve or load the data. Please check your connectivity. We are sorry for your inconvenience.')
+                    console.log(error);
+                })
+            }
         },
 
     }
