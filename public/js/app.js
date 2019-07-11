@@ -1894,6 +1894,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     search_in: ''
@@ -39525,6 +39526,7 @@ var render = function() {
                         _vm._v(" "),
                         _c("day-card", {
                           attrs: {
+                            text: item.agenda.text,
                             videoBackgroundImage:
                               item.agenda.videoBackgroundImage,
                             videoBackgroundImageURL:

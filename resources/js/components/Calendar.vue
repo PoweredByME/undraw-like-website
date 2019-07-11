@@ -39,6 +39,7 @@
                             <h5 class="text-center calendar-text-dark">{{ item.month }} {{ item.date }}, {{ item.year }}</h5>
                         </div>
                         <day-card
+                            :text = "item.agenda.text"
                             :videoBackgroundImage="item.agenda.videoBackgroundImage"
                             :videoBackgroundImageURL="item.agenda.videoBackgroundImageURL"
                             :video="item.agenda.video"
