@@ -67,9 +67,9 @@
                             <a :href='"https://plus.google.com/share?url==" + redirectTo' role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #d34836 !important"><i class="fa fa-google-plus mr-2"></i>Google Plus</a>
                             <a :href='"https://www.linkedin.com/shareArticle?mini=true&url=" + redirectTo' role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #0077b5 !important"><i class="fa fa-linkedin mr-2"></i>Linked In</a>
                         </div>
-                        <div class=" mt-4 d-flex align-items-center justify-content-center">
+                        <div v-if="videoBackgroundImageURL && videoBackgroundImageURL.length > 0" class="mt-4 d-flex align-items-center justify-content-center">
                             <a :href="videoBackgroundImageURL" target="_blank" class="btn btn-light text-dark" role="btn">
-                                <i class="fa fa-image mr-2"></i> View Image Source
+                                <i class="fa fa-image mr-2"></i> View Source
                             </a>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
             </div>
 
             <template v-slot:close>
-                <div style="position:absolute;top:0;right:0;font-size:28px;cursor:pointer" class="pt-4 pr-5 calendar-text-red" v-on:click='closeModal'>
+                <div style="position:absolute;top:0;right:0;font-size:28px;cursor:pointer" class="pt-4 pr-5 text-dark" v-on:click='closeModal'>
                     <i class="fa fa-close"></i>
                 </div>
             </template>

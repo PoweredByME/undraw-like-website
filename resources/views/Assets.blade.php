@@ -6,7 +6,7 @@
 
     <div id="app" style="min-height:100vh">
         @component('Master.navbar', ['title' => "
-                                    <img width='76' src='webAssets/images/logo.svg'>
+                                    <img width='76' src='/webAssets/images/logo.svg'>
                                     <span class='pl-1 pr-1'> | </span>
                                     <span>Illustrations</span>
                                 ",
@@ -37,6 +37,8 @@
 
         <illustrations-component :search_in="search_in"></illustrations-component>
     </div>
+
+    <script src="/js/saveSvgAsPng.js"></script>
 
     @component('Master.footerSmall')
     @endcomponent()

@@ -8,7 +8,7 @@
 
     <div id="app">
             @component('Master.navbar', ['title' => "
-                    <img width='76' src='webAssets/images/logo.svg'>
+                    <img width='76' src='/webAssets/images/logo.svg'>
                     <span class='pl-1 pr-1'> | </span>
                     <span>Calendar</span>
                 ",

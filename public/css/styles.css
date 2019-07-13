@@ -17,7 +17,7 @@ body.no-scroll{
 }
 
 .calendar-bg-orange{
-    background: #fc8318;
+    background: rgb(252, 131, 24);
 }
 .calendar-bg-blue{
     background: #2171cd;
@@ -136,7 +136,6 @@ body.no-scroll{
     width: 56px;
     outline: none;
     border: none;
-    background: white;
     border-radius: 100px;
 }
 

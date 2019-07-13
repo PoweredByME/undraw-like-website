@@ -25,6 +25,7 @@
     </div>
     <div v-else style="min-height:100vh;width:100vw" class="mt-5 mb-5">
         <div class="container">
+            <h1 class="mb-4">Searching Events...</h1>
             <div class="row">
 
                 <div

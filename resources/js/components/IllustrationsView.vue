@@ -8,6 +8,7 @@
                 :svg='item.svg'
                 :title="item.title"
                 :redirectTo="item.redirectTo"
+                :class_uid="'svg-' + index"
             ></illustration-card>
         </div>
     </div>

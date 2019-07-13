@@ -1895,6 +1895,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     search_in: ''
@@ -2597,8 +2598,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
+    class_uid: {
+      "default": '',
+      type: String
+    },
     svg: {
       "default": ''
     },
@@ -2624,7 +2636,34 @@ __webpack_require__.r(__webpack_exports__);
       svgItem = $(svgItem);
     }
 
-    this.svgData = svgItem.attr('width', '100%').attr('height', 'auto').prop('outerHTML');
+    this.svgData = svgItem.attr('width', '100%').addClass(this.class_uid).attr('height', 'auto').prop('outerHTML');
+  },
+  methods: {
+    save: function save(type) {
+      var _SVG = $("." + this.class_uid);
+
+      if (type == "SVG") {
+        this.saveSvg(_SVG, 'image.svg');
+      } else if (type == "PNG") {
+        saveSvgAsPng(document.getElementsByClassName(this.class_uid)[0], 'image.png');
+      }
+    },
+    saveSvg: function saveSvg(svgEl, name) {
+      svgEl = svgEl[0];
+      svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      var svgData = svgEl.outerHTML;
+      var preface = '<?xml version="1.0" standalone="no"?>\r\n';
+      var svgBlob = new Blob([preface, svgData], {
+        type: "image/svg+xml;charset=utf-8"
+      });
+      var svgUrl = URL.createObjectURL(svgBlob);
+      var downloadLink = document.createElement("a");
+      downloadLink.href = svgUrl;
+      downloadLink.download = name;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
   }
 });
 
@@ -2708,6 +2747,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     redirect_to: {
@@ -2720,10 +2763,11 @@ __webpack_require__.r(__webpack_exports__);
       item: null,
       svg: null,
       colors: {
-        hex: "#324534"
+        hex8: "#324534FF"
       },
       selectedColorID: '',
-      svgEventsAttached: false
+      svgEventsAttached: false,
+      editHistory: []
     };
   },
   mounted: function mounted() {
@@ -2767,8 +2811,9 @@ __webpack_require__.r(__webpack_exports__);
       var _CSEN = 'element-';
       var inst = this;
       $('svg').find("*").each(function () {
-        var el = $('svg').find($(this));
-        el.addClass('color-all');
+        var el = $('svg').find($(this)); //el.addClass('color-all');
+
+        if (!el.attr('fill')) return;
         el.addClass(_CSEN + _i);
         el.click(function () {
           inst.onSelectColor(el.attr('class').split(' ').pop());
@@ -2780,13 +2825,20 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     colors: function colors(newVal, oldVal) {
-      $('.' + this.selectedColorID).attr('fill', newVal.hex8).find('*').each(function () {
-        $('svg').find($(this)).attr('fill', newVal.hex8);
+      if (!newVal || !oldVal) return;
+      var oldEdit = $('.' + this.selectedColorID).attr('fill');
+      $('.' + this.selectedColorID).attr('fill', newVal.hex8).find('*').each(function () {//$('svg').find($(this)).attr('fill', newVal.hex8);
       });
+      var newEdit = $('.' + this.selectedColorID).attr('fill');
       var inst = this;
       inst.item.color_slots.forEach(function (element) {
         $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
         $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
+      });
+      this.editHistory.push({
+        item: this.selectedColorID,
+        newEdit: newEdit,
+        oldEdit: oldEdit
       });
     }
   },
@@ -2821,6 +2873,19 @@ __webpack_require__.r(__webpack_exports__);
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
+    },
+    undoEdit: function undoEdit() {
+      var edit = this.editHistory.pop();
+      if (!edit) return;
+      $('.' + edit.item).attr('fill', edit.oldEdit).find('*').each(function () {
+        $('svg').find($(this)).attr('fill', edit.oldEdit);
+      });
+      var inst = this;
+      inst.item.color_slots.forEach(function (element) {
+        $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
+        $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
+      });
+      if (this.editHistory.length < 1) this.selectedColorID = "";
     }
   }
 });
@@ -2964,6 +3029,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -7523,7 +7589,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.prev-ctrl-btn{\n    border-top-left-radius: 5px;\n    border-bottom-left-radius: 5px;\n    width:80px;\n}\n.next-ctrl-btn{\n    border-top-right-radius: 5px;\n    border-bottom-right-radius: 5px;\n    width:80px;\n}\n.today-ctrl-btn{\n    width:125px;\n}\n.showMonthlyButton-mobile{\n    -webkit-box-pack: end;\n            justify-content: end;\n}\n.calendar-share-btn{\n    background: rgba(33, 113, 205, 0.8) !important;\n    border-radius: 5px;\n    color:white;\n    -webkit-transition-property: all;\n    transition-property: all;\n    -webkit-transition-duration: 150ms;\n            transition-duration: 150ms;\n}\n.calendar-share-btn:hover{\n    background: rgba(33, 113, 205, 1) !important;\n    color: white;\n    text-decoration: none;\n}\n@media (max-width:992px) {\n.calendar-controller-container{\n        display: -webkit-box;\n        display: flex;\n        -webkit-box-align: center;\n                align-items: center;\n        -webkit-box-pack: center;\n                justify-content: center;\n}\n.share-btn-container{\n        margin-right:auto;\n}\n.showMonthlyButton-mobile{\n       -webkit-box-pack: center;\n               justify-content: center;\n}\n.prev-ctrl-btn{\n        border-top-left-radius: 5px;\n        border-bottom-left-radius: 5px;\n        width:60px;\n}\n.next-ctrl-btn{\n        border-top-right-radius: 5px;\n        border-bottom-right-radius: 5px;\n        width:60px;\n}\n.today-ctrl-btn{\n        width:95px;\n}\n}\n\n", ""]);
+exports.push([module.i, "\n.prev-ctrl-btn{\n    border-top-left-radius: 5px;\n    border-bottom-left-radius: 5px;\n    width:80px;\n}\n.next-ctrl-btn{\n    border-top-right-radius: 5px;\n    border-bottom-right-radius: 5px;\n    width:80px;\n}\n.today-ctrl-btn{\n    width:125px;\n}\n.showMonthlyButton-mobile{\n    -webkit-box-pack: end;\n            justify-content: flex-end;\n}\n.calendar-share-btn{\n    background: rgba(33, 113, 205, 0.8) !important;\n    border-radius: 5px;\n    color:white;\n    -webkit-transition-property: all;\n    transition-property: all;\n    -webkit-transition-duration: 150ms;\n            transition-duration: 150ms;\n}\n.calendar-share-btn:hover{\n    background: rgba(33, 113, 205, 1) !important;\n    color: white;\n    text-decoration: none;\n}\n@media (max-width:992px) {\n.calendar-controller-container{\n        display: -webkit-box;\n        display: flex;\n        -webkit-box-align: center;\n                align-items: center;\n        -webkit-box-pack: center;\n                justify-content: center;\n}\n.share-btn-container{\n        margin-right:auto;\n}\n.showMonthlyButton-mobile{\n       -webkit-box-pack: center;\n               justify-content: center;\n}\n.prev-ctrl-btn{\n        border-top-left-radius: 5px;\n        border-bottom-left-radius: 5px;\n        width:60px;\n}\n.next-ctrl-btn{\n        border-top-right-radius: 5px;\n        border-bottom-right-radius: 5px;\n        width:60px;\n}\n.today-ctrl-btn{\n        width:95px;\n}\n}\n\n", ""]);
 
 // exports
 
@@ -7561,7 +7627,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.calendar-modal-wrapper{\n    z-index: 100;\n    background: rgba(41, 192, 184, 0.8);\n    color:white;\n\n    position:fixed;;\n    height: 100vh;\n    width: 100vw;\n    top:0;\n\n    left:-100vw;\n    -webkit-transition-property: opacity;\n    transition-property: opacity;\n    -webkit-transition-duration: 250ms;\n            transition-duration: 250ms;\n    opacity: 0;\n}\n.calendar-modal-wrapper.show{\n    left:0;\n    opacity: 1;\n}\n.modal-title-head{\n    font-size: 72px;\n}\n\n", ""]);
+exports.push([module.i, "\n.calendar-modal-wrapper{\n    z-index: 100;\n    background: rgba(252, 131, 24,0.8);\n    color:white;\n\n    position:fixed;;\n    height: 100vh;\n    width: 100vw;\n    top:0;\n\n    left:-100vw;\n    -webkit-transition-property: opacity;\n    transition-property: opacity;\n    -webkit-transition-duration: 250ms;\n            transition-duration: 250ms;\n    opacity: 0;\n}\n.calendar-modal-wrapper.show{\n    left:0;\n    opacity: 1;\n}\n.modal-title-head{\n    font-size: 72px;\n}\n\n", ""]);
 
 // exports
 
@@ -7656,7 +7722,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.ill-svg-container{\n    min-height:100vh;\n    padding-top:24px;\n}\n@media (max-width:992px){\n.ill-svg-container{\n        min-height: auto;\n        height:auto;\n}\n}\n", ""]);
+exports.push([module.i, "\n.ill-svg-container{\n    min-height:100vh;\n    padding-top:24px;\n}\n.color-btn{\n    background:transparent;\n    border:none;\n    outline:none;\n    font-size:24px;\n    cursor: pointer;\n}\n.dl-svg-btn{\n    background: #eee;\n    border: none;\n    outline: none;\n    padding-top: 8px;\n    padding-bottom: 8px;\n    padding-left: 24px;\n    padding-right: 24px;\n    border-radius: 4px;\n    -webkit-transition-property: all;\n    transition-property: all;\n    -webkit-transition-duration: 150ms;\n            transition-duration: 150ms;\n}\n.undo-btn{\n    padding-top: 8px;\n    padding-bottom: 8px;\n    padding-left: 16px;\n    padding-right: 16px;\n    border-radius: 24px;\n}\n.undo-btn:hover{\n    background-color: #fc8318 !important;\n    color:white\n}\n.dl-svg-btn:hover{\n    background: #2171cd;\n    color: white\n}\n.dl-png-btn{}\n@media (max-width:992px){\n.ill-svg-container{\n        min-height: auto;\n        height:auto;\n}\n}\n", ""]);
 
 // exports
 
@@ -39477,6 +39543,8 @@ var render = function() {
         },
         [
           _c("div", { staticClass: "container" }, [
+            _c("h1", { staticClass: "mb-4" }, [_vm._v("Searching Events...")]),
+            _vm._v(" "),
             _c(
               "div",
               { staticClass: "row" },
@@ -40009,7 +40077,7 @@ var render = function() {
                   _c(
                     "div",
                     {
-                      staticClass: "pt-4 pr-5 calendar-text-red",
+                      staticClass: "pt-4 pr-5 text-dark",
                       staticStyle: {
                         position: "absolute",
                         top: "0",
@@ -40256,32 +40324,37 @@ var render = function() {
                           ]
                         ),
                         _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass:
-                              " mt-4 d-flex align-items-center justify-content-center"
-                          },
-                          [
-                            _c(
-                              "a",
+                        _vm.videoBackgroundImageURL &&
+                        _vm.videoBackgroundImageURL.length > 0
+                          ? _c(
+                              "div",
                               {
-                                staticClass: "btn btn-light text-dark",
-                                attrs: {
-                                  href: _vm.videoBackgroundImageURL,
-                                  target: "_blank",
-                                  role: "btn"
-                                }
+                                staticClass:
+                                  "mt-4 d-flex align-items-center justify-content-center"
                               },
                               [
-                                _c("i", { staticClass: "fa fa-image mr-2" }),
-                                _vm._v(
-                                  " View Image Source\n                        "
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass: "btn btn-light text-dark",
+                                    attrs: {
+                                      href: _vm.videoBackgroundImageURL,
+                                      target: "_blank",
+                                      role: "btn"
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass: "fa fa-image mr-2"
+                                    }),
+                                    _vm._v(
+                                      " View Source\n                        "
+                                    )
+                                  ]
                                 )
                               ]
                             )
-                          ]
-                        )
+                          : _vm._e()
                       ])
                     ]
                   )
@@ -40392,9 +40465,53 @@ var render = function() {
               domProps: { innerHTML: _vm._s(_vm.svgData) }
             }),
             _vm._v(" "),
-            _c("p", { staticClass: "text-center m-0 calendar-text-dark" }, [
-              _vm._v(_vm._s(_vm.title))
-            ])
+            _c(
+              "p",
+              { staticClass: "text-center m-0 mt-2 calendar-text-dark" },
+              [_vm._v(_vm._s(_vm.title))]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "d-flex align-items-center justify-content-center"
+              },
+              [
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.save("SVG")
+                      }
+                    }
+                  },
+                  [_vm._v(".svg")]
+                ),
+                _vm._v(" "),
+                _c("p", { staticClass: "m-0 mx-2 text-dark" }, [_vm._v("|")]),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.save("PNG")
+                      }
+                    }
+                  },
+                  [_vm._v(".png")]
+                ),
+                _vm._v(" "),
+                _c("p", { staticClass: "m-0 mx-2 text-dark" }, [_vm._v("|")]),
+                _vm._v(" "),
+                _c("a", { attrs: { href: _vm.redirectTo } }, [_vm._v("Edit")])
+              ]
+            )
           ]
         )
       ]
@@ -40451,119 +40568,155 @@ var render = function() {
               },
               [
                 _c("div", { staticClass: "pt-5" }, [
-                  _c("div", { staticClass: "mb-4" }, [
+                  _c("div", { staticClass: "mb-3" }, [
                     _c("h1", [_vm._v(_vm._s(_vm.item.title))])
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "mb-3" }, [
+                  _c("div", [
                     _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-outline-dark mr-2 mb-2",
-                        attrs: { role: "btn" },
-                        on: {
-                          click: function($event) {
-                            return _vm.save("SVG")
-                          }
-                        }
-                      },
-                      [
-                        _c("i", { staticClass: "fa fa-download mr-2" }),
-                        _vm._v("Download SVG")
-                      ]
+                      "div",
+                      _vm._l(_vm.item.color_slots, function(cs) {
+                        return _c(
+                          "button",
+                          {
+                            key: cs.id,
+                            class: [
+                              "color-btn mr-3 p-0 mb-1",
+                              cs.color_id == _vm.selectedColorID
+                                ? "color-btn-selected"
+                                : "",
+                              "edit-btn-" + cs.color_id
+                            ],
+                            attrs: {
+                              role: "btn",
+                              "edit-data": cs.color_id,
+                              title:
+                                " Select this to edit the referenced element of the Image. (" +
+                                cs.color_id +
+                                ")"
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.onSelectColor(cs.color_id)
+                              }
+                            }
+                          },
+                          [
+                            _c("i", {
+                              class: [
+                                "fa",
+                                cs.color_id == _vm.selectedColorID
+                                  ? "fa-square"
+                                  : "fa-circle"
+                              ]
+                            })
+                          ]
+                        )
+                      }),
+                      0
                     ),
                     _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-outline-dark mr-2 mb-2",
-                        attrs: { role: "btn" },
-                        on: {
-                          click: function($event) {
-                            return _vm.save("PNG")
-                          }
-                        }
-                      },
-                      [
-                        _c("i", { staticClass: "fa fa-download mr-2" }),
-                        _vm._v("Download PNG")
-                      ]
-                    )
+                    _vm.selectedColorID.length > 0
+                      ? _c("div", { staticClass: "d-flex flex-wrap mt-3" }, [
+                          _c(
+                            "div",
+                            { staticClass: "mb-3 mr-3" },
+                            [
+                              _c("sketch-picker", {
+                                attrs: {
+                                  presetColors: [
+                                    "#ffffff",
+                                    "#f3ec3a",
+                                    "#f9bd17",
+                                    "#f99b1d",
+                                    "#f15523",
+                                    "#ef3124",
+                                    "#DE0081",
+                                    "#a71e48",
+                                    "#7c3597",
+                                    "#463191",
+                                    "#000000",
+                                    "#3d5dac",
+                                    "#1296ce",
+                                    "#63b145",
+                                    "#19BC81",
+                                    "#d0dd36"
+                                  ]
+                                },
+                                model: {
+                                  value: _vm.colors,
+                                  callback: function($$v) {
+                                    _vm.colors = $$v
+                                  },
+                                  expression: "colors"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("div", [
+                            _vm.editHistory.length > 0
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "dl-svg-btn undo-btn mr-2 mb-2",
+                                    attrs: { role: "btn" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.undoEdit()
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("i", { staticClass: "fa fa-undo mr-2" }),
+                                    _vm._v("Undo Changes")
+                                  ]
+                                )
+                              : _vm._e()
+                          ])
+                        ])
+                      : _vm._e()
                   ]),
                   _vm._v(" "),
-                  _c(
-                    "div",
-                    [
-                      _vm._m(0),
-                      _vm._v(" "),
+                  _c("div", { staticClass: "mb-3 mt-3" }, [
+                    _c("div", [
                       _c(
-                        "div",
-                        _vm._l(_vm.item.color_slots, function(cs) {
-                          return _c(
-                            "button",
-                            {
-                              key: cs.id,
-                              class: [
-                                "btn mr-2 mb-1",
-                                cs.color_id == _vm.selectedColorID
-                                  ? "btn-dark"
-                                  : " btn-outline-dark",
-                                "edit-btn-" + cs.color_id
-                              ],
-                              attrs: { role: "btn", "edit-data": cs.color_id },
-                              on: {
-                                click: function($event) {
-                                  return _vm.onSelectColor(cs.color_id)
-                                }
-                              }
-                            },
-                            [
-                              _c("i", {
-                                staticClass: "fa fa-paint-brush mr-2"
-                              }),
-                              _vm._v(" "),
-                              _c("span", [_vm._v(_vm._s(cs.color_id))])
-                            ]
-                          )
-                        }),
-                        0
+                        "button",
+                        {
+                          staticClass: "dl-svg-btn mr-2 mb-2",
+                          attrs: { role: "btn" },
+                          on: {
+                            click: function($event) {
+                              return _vm.save("SVG")
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fa fa-download mr-2" }),
+                          _vm._v("Download SVG")
+                        ]
                       ),
                       _vm._v(" "),
-                      _vm.selectedColorID.length > 0
-                        ? _c("sketch-picker", {
-                            staticClass: "mt-3",
-                            attrs: {
-                              presetColors: [
-                                "#ffffff",
-                                "#f3ec3a",
-                                "#f9bd17",
-                                "#f99b1d",
-                                "#f15523",
-                                "#ef3124",
-                                "#DE0081",
-                                "#a71e48",
-                                "#7c3597",
-                                "#463191",
-                                "#000000",
-                                "#3d5dac",
-                                "#1296ce",
-                                "#63b145",
-                                "#19BC81",
-                                "#d0dd36"
-                              ]
-                            },
-                            model: {
-                              value: _vm.colors,
-                              callback: function($$v) {
-                                _vm.colors = $$v
-                              },
-                              expression: "colors"
+                      _c(
+                        "button",
+                        {
+                          staticClass: "dl-svg-btn mr-2 mb-2",
+                          attrs: { role: "btn" },
+                          on: {
+                            click: function($event) {
+                              return _vm.save("PNG")
                             }
-                          })
-                        : _vm._e()
-                    ],
-                    1
-                  )
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fa fa-download mr-2" }),
+                          _vm._v("Download PNG")
+                        ]
+                      )
+                    ])
+                  ])
                 ])
               ]
             )
@@ -40572,17 +40725,7 @@ var render = function() {
       ])
     : _c("div", { staticClass: "pt-5 pb-5 mt-5 container" })
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("h4", { staticClass: "mb-2" }, [
-      _c("i", { staticClass: "fa fa-edit mr-2" }),
-      _vm._v("Edit Colors")
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -40654,7 +40797,7 @@ var render = function() {
               _c(
                 "button",
                 {
-                  staticClass: "ill-fab-btn shadow",
+                  staticClass: "ill-fab-btn shadow text-white calendar-bg-blue",
                   on: {
                     click: function() {
                       this$1.showEditColors = !this$1.showEditColors
@@ -40741,7 +40884,8 @@ var render = function() {
           attrs: {
             svg: item.svg,
             title: item.title,
-            redirectTo: item.redirectTo
+            redirectTo: item.redirectTo,
+            class_uid: "svg-" + index
           }
         })
       }),

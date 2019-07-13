@@ -21,6 +21,7 @@ class Agenda extends Model
         if(File::exists(public_path().$this->videoBackgroundImage)){
             File::delete(public_path().$this->videoBackgroundImage);
         }
+        foreach($this->agendaKeyword as $i){$i->delete();}
     }
 
     public function sluggable(){

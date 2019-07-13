@@ -18,7 +18,7 @@
                     <input type="text" name="description" required placeholder="Enter the description of the agenda" class="form-control" />
                     <p class="m-0 mt-2">Video URL</p>
                     <input type="text" name="videoURL"  placeholder="Enter the description of the agenda" class="form-control" />
-                    <p class="m-0 mt-2">Images video background URL</p>
+                    <p class="m-0 mt-2">Image for video preview</p>
                     <input type="text" name="videoBackgroundImageURL"  placeholder="Enter the video Background Image URL" class="form-control" />
                     <p class="mb-1 mt-1">Images video background</p>
                     <input type="file" name="videoBackgroundImage"  accept="image/*" />
@@ -42,6 +42,29 @@
                 ">Submit</button>
             </template>
         </v-modal>
+
+        <br>
+        <v-modal name="Import from CSV" title="Import from CSV" button_title="Import from CSV">
+            <div style="height:100px;overflow-y:auto">
+                <form method="post" enctype="multipart/form-data" id="import-from-csv" class="mt-1" action="/admin/calendar/csv/{{ $loggedInUser->id }}">
+                    @csrf
+                    <p class="m-0">Upload the csv file</p>
+                    <input type="file" name="csv" accept=".csv" class="form-control" required>
+                </form>
+            </div>
+            <template v-slot:footer>
+                <button role="btn" class="btn btn-primary" onclick="
+                    var form = document.getElementById('import-from-csv');
+                    form.submit();
+                ">Submit</button>
+            </template>
+        </v-modal>
+
+        <p class="mt-2">
+            The header of the the CSV should be of the following formate
+            <br>
+            date,title,description,video URL,image,image URL,keyword 1,keyword 2,keyword 3,keyword 4,keyword 5
+        </p>
 
         <div class="mt-5">
             @foreach(\App\Day::all() as $day)
@@ -73,7 +96,42 @@
                                     @csrf
                                     @method('DELETE')
                                 </form>
-                                <button onclick="confirm('Are you sure you want to delete it?')? document.getElementById('delete-agenda-{{ $day->id }}-{{ $agenda->id }}').submit() : -1" class="btn btn-danger"><i class="fa fa-trash mr-2"></i>Delete</button>
+                                <button onclick="confirm('Are you sure you want to delete it?')? document.getElementById('delete-agenda-{{ $day->id }}-{{ $agenda->id }}').submit() : -1" class="btn btn-danger mb-1"><i class="fa fa-trash mr-2"></i>Delete</button>
+
+                                <v-modal name="edit-agenda-modal-{{ $agenda->id }}" title="Edit Agenda" button_title="Edit Agenda">
+                                    <div style="height:500px;overflow-y:auto">
+                                        <form method="post" enctype="multipart/form-data" id="edit-agenda-{{ $agenda->id }}" class="mt-1" action="/admin/calendar/agenda/edit/{{ $agenda->id }}/{{ $loggedInUser->id }}">
+                                            @csrf
+                                            @method('PATCH')
+                                            <p class="m-0">Pick a date</p>
+                                            <input type="date" name="date" class="form-control" value="{{ $agenda->Day->date }}">
+                                            <p class="m-0 mt-2">Title</p>
+                                            <input type="text" name="title" value="{{ $agenda->title }}" placeholder="Enter the title of the agenda" class="form-control" />
+                                            <p class="m-0 mt-2">Description</p>
+                                            <input type="text" name="description" value="{{ $agenda->description }}" placeholder="Enter the description of the agenda" class="form-control" />
+                                            <p class="m-0 mt-2">Video URL</p>
+                                            <input type="text" name="videoURL" value="{{ $agenda->videoURL }}" placeholder="Enter the description of the agenda" class="form-control" />
+                                            <p class="m-0 mt-2">Image for video preview SOURCE</p>
+                                            <input type="text" name="videoBackgroundImageURL" value="{{ $agenda->videoBackgroundImageURL }}"  placeholder="Enter the video Background Image URL" class="form-control" />
+                                            <p class="mb-1 mt-1">Image for video preview </p>
+                                            <input type="file" name="videoBackgroundImage"  accept="image/*" />
+                                            <h4 class="mt-3">Event Keywords</h4>
+                                            <p class="mb-1">Please enter 5 keywords for the Illustration</p>
+                                            @for($i=0;$i<5;$i++)
+                                                <input type="text" name="keyword_{{ $i }}" placeholder="Enter the keyword {{ $i }}" class="mb-2 form-control"
+                                                    value="{{ count($agenda->agendaKeyword) > $i ? $agenda->agendaKeyword[$i]->name:''}}"
+                                                />
+                                            @endfor
+                                        </form>
+                                    </div>
+                                    <template v-slot:footer>
+                                        <button role="btn" class="btn btn-primary" onclick="
+                                            var form = document.getElementById('edit-agenda-{{ $agenda->id }}');
+                                            form.submit();
+                                        ">Submit</button>
+                                    </template>
+                                </v-modal>
+
                             </template>
                         </va-card>
                     @endforeach

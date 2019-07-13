@@ -13,7 +13,7 @@
 
         <div class="ill-fab-container pb-4 pr-4">
             <div class="d-flex align-items-center justify-content-end">
-                <button class="ill-fab-btn shadow" @click="() => {this.showEditColors = !this.showEditColors}">
+                <button class="ill-fab-btn shadow text-white calendar-bg-blue" @click="() => {this.showEditColors = !this.showEditColors}">
                     <i v-if="!showEditColors" class="fa fa-edit ill-fab-btn-icon"/>
                     <i v-else class="fa fa-close ill-fab-btn-icon"/>
                 </button>

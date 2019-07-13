@@ -9,52 +9,56 @@
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
                     <div class="pl-2 pr-2 pb-5 ill-svg-container d-flex align-items-center justify-content-stretch">
                         <div class="pt-5">
-                            <div class="mb-4">
+                            <div class="mb-3">
                                 <h1>{{ item.title }}</h1>
                                 <!--<h5 style="letter-spacing:2px;">Edit Or Download</h5>-->
                             </div>
-                            <div class="mb-3">
-                                <button @click="save('SVG')" role="btn" class="btn btn-outline-dark mr-2 mb-2"><i class="fa fa-download mr-2"></i>Download SVG</button>
-                                <button @click="save('PNG')" role="btn" class="btn btn-outline-dark mr-2 mb-2"><i class="fa fa-download mr-2"></i>Download PNG</button>
-                            </div>
                             <div>
-                                <h4 class="mb-2"><i class="fa fa-edit mr-2"></i>Edit Colors</h4>
-                                <!--<p>Please click on any part of the image to color it. Please, click the button below to color the entire image.
-                                    <br>
-                                    <strong>NOTE : The button to color the entire image is already selected.</strong>
-                                </p>-->
                                 <div>
                                     <button
                                         role="btn"
                                         v-for="cs in item.color_slots"
                                         :key="cs.id"
-                                        :class='["btn mr-2 mb-1", cs.color_id == selectedColorID ? "btn-dark" : " btn-outline-dark", "edit-btn-" + cs.color_id]'
+                                        :class='["color-btn mr-3 p-0 mb-1", cs.color_id == selectedColorID ? "color-btn-selected" : "", "edit-btn-" + cs.color_id]'
                                         :edit-data="cs.color_id"
                                         @click = "onSelectColor(cs.color_id)"
+                                        :title="' Select this to edit the referenced element of the Image. (' + cs.color_id + ')'"
                                     >
-                                    <i class="fa fa-paint-brush mr-2"></i>
-                                    <span>{{ cs.color_id }}</span>
+                                    <i :class='["fa", cs.color_id == selectedColorID ? "fa-square" : "fa-circle"]'></i>
                                     </button>
                                 </div>
-                                <sketch-picker v-if="selectedColorID.length > 0" class="mt-3" v-model="colors" :presetColors="[
-                                                                                            '#ffffff',
-                                                                                            '#f3ec3a',
-                                                                                            '#f9bd17',
-                                                                                            '#f99b1d',
-                                                                                            '#f15523',
-                                                                                            '#ef3124',
-                                                                                            '#DE0081',
-                                                                                            '#a71e48',
-                                                                                            '#7c3597',
-                                                                                            '#463191',
-                                                                                            '#000000',
-                                                                                            '#3d5dac',
-                                                                                            '#1296ce',
-                                                                                            '#63b145',
-                                                                                            '#19BC81',
-                                                                                            '#d0dd36',
-                                                                                            ]"
-                                />
+                                <div v-if="selectedColorID.length > 0" class="d-flex flex-wrap mt-3">
+                                    <div class="mb-3 mr-3">
+                                        <sketch-picker  class="" v-model="colors" :presetColors="[
+                                                                                                    '#ffffff',
+                                                                                                    '#f3ec3a',
+                                                                                                    '#f9bd17',
+                                                                                                    '#f99b1d',
+                                                                                                    '#f15523',
+                                                                                                    '#ef3124',
+                                                                                                    '#DE0081',
+                                                                                                    '#a71e48',
+                                                                                                    '#7c3597',
+                                                                                                    '#463191',
+                                                                                                    '#000000',
+                                                                                                    '#3d5dac',
+                                                                                                    '#1296ce',
+                                                                                                    '#63b145',
+                                                                                                    '#19BC81',
+                                                                                                    '#d0dd36',
+                                                                                                    ]"
+                                        />
+                                    </div>
+                                <div>
+                                    <button v-if="editHistory.length > 0" @click="undoEdit()"  class="dl-svg-btn undo-btn mr-2 mb-2" role='btn'><i class="fa fa-undo mr-2"></i>Undo Changes</button>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <div>
+                                    <button @click="save('SVG')"  class="dl-svg-btn mr-2 mb-2" role='btn'><i class="fa fa-download mr-2"></i>Download SVG</button>
+                                    <button @click="save('PNG')"  class="dl-svg-btn mr-2 mb-2" role='btn'><i class="fa fa-download mr-2"></i>Download PNG</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -80,9 +84,10 @@
             return {
                 item:null,
                 svg : null,
-                colors: {hex : "#324534"},
+                colors: {hex8 : "#324534FF"},
                 selectedColorID:'',
-                svgEventsAttached: false
+                svgEventsAttached: false,
+                editHistory: [],
             };
         },
 
@@ -127,7 +132,8 @@
                 let inst = this;
                 $('svg').find("*").each(function(){
                     var el = $('svg').find($(this));
-                    el.addClass('color-all');
+                    //el.addClass('color-all');
+                    if(!el.attr('fill')) return;
                     el.addClass(_CSEN + _i);
                     el.click(function(){
                         inst.onSelectColor(el.attr('class').split(' ').pop());
@@ -140,14 +146,23 @@
 
         watch:{
             colors: function(newVal, oldVal){
+                if(!newVal || !oldVal) return;
+                var oldEdit = $('.' + this.selectedColorID).attr('fill');
                 $('.' + this.selectedColorID).attr('fill', newVal.hex8).find('*').each(function(){
-                    $('svg').find($(this)).attr('fill', newVal.hex8);
+                    //$('svg').find($(this)).attr('fill', newVal.hex8);
                 });
+                var newEdit = $('.' + this.selectedColorID).attr('fill');
 
                 let inst = this;
                 inst.item.color_slots.forEach(element => {
                     $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
                     $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
+                });
+
+                this.editHistory.push({
+                    item : this.selectedColorID,
+                    newEdit : newEdit,
+                    oldEdit : oldEdit,
                 });
             },
         },
@@ -183,6 +198,21 @@
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
                 document.body.removeChild(downloadLink);
+            },
+
+            undoEdit(){
+                var edit = this.editHistory.pop();
+                if(!edit) return;
+                $('.' + edit.item).attr('fill', edit.oldEdit).find('*').each(function(){
+                    $('svg').find($(this)).attr('fill', edit.oldEdit);
+                });
+
+                let inst = this;
+                inst.item.color_slots.forEach(element => {
+                    $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
+                    $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
+                });
+                if (this.editHistory.length < 1) this.selectedColorID = "";
             }
         },
 
@@ -194,6 +224,48 @@
         min-height:100vh;
         padding-top:24px;
     }
+
+    .color-btn{
+        background:transparent;
+        border:none;
+        outline:none;
+        font-size:24px;
+        cursor: pointer;
+    }
+
+    .dl-svg-btn{
+        background: #eee;
+        border: none;
+        outline: none;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-left: 24px;
+        padding-right: 24px;
+        border-radius: 4px;
+        transition-property: all;
+        transition-duration: 150ms;
+    }
+
+    .undo-btn{
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-left: 16px;
+        padding-right: 16px;
+        border-radius: 24px;
+
+    }
+
+    .undo-btn:hover{
+        background-color: #fc8318 !important;
+        color:white
+    }
+
+    .dl-svg-btn:hover{
+        background: #2171cd;
+        color: white
+    }
+
+    .dl-png-btn{}
 
     @media (max-width:992px){
         .ill-svg-container{

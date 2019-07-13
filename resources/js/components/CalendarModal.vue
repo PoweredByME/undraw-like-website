@@ -54,7 +54,7 @@
 
     .calendar-modal-wrapper{
         z-index: 100;
-        background: rgba(41, 192, 184, 0.8);
+        background: rgba(252, 131, 24,0.8);
         color:white;
 
         position:fixed;;

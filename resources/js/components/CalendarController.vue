@@ -53,7 +53,7 @@
     }
 
     .showMonthlyButton-mobile{
-        justify-content: end;
+        justify-content: flex-end;
     }
 
 
