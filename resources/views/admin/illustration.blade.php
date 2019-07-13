@@ -130,7 +130,7 @@
         <p class="mt-2">
             The header of the the CSV should be of the following formate
             <br>
-            date,title,description,video URL,image,image URL,keyword 1,keyword 2,keyword 3,keyword 4,keyword 5
+            title,svg,category,keyword 1,keyword 2,keyword 3,keyword 4,keyword 5,color 1,color 2,color 3,color 4,color 5,color 6
         </p>
 
 
