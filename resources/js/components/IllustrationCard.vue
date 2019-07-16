@@ -1,15 +1,18 @@
 <template>
     <div class="col-sm-12 col-md-4 col-lg-3 col-xl-3">
-        <a :href="redirectTo" target="" style="text-decoration:none">
+        <a :href="redirectTo" target="_blank" style="text-decoration:none">
             <div class="ill-card mb-4 p-4 pt-3 text-center shadow-sm">
-                <div style="width:100%;min-height:200px" class="d-flex align-items-center justify-content-stretch"  v-html='svgData'></div>
+                <p v-if="svgData.length < 1" class="text-dark">Loading...</p>
+                <div style="width:100%;min-height:200px" class="d-flex align-items-center justify-content-stretch"  v-html='svgData'>
+
+                </div>
                 <p class="text-center m-0 mt-2 calendar-text-dark">{{ title }}</p>
-                <div class="d-flex align-items-center justify-content-center">
+                <div v-if='svgData.length > 0' class="d-flex align-items-center justify-content-center">
                     <a href="#" @click.prevent="save('SVG')">.svg</a>
                     <p class="m-0 mx-2 text-dark">|</p>
                     <a href="#" @click.prevent="save('PNG')">.png</a>
                     <p class="m-0 mx-2 text-dark">|</p>
-                    <a :href="redirectTo">Edit</a>
+                    <a :href="redirectTo" target="_blank">Edit</a>
                 </div>
             </div>
         </a>
@@ -24,7 +27,7 @@
                 type:String
             },
             svg : {
-                default:'',
+                default:null,
             },
             title:{
                 type:String,
@@ -43,15 +46,30 @@
         },
 
         mounted(){
-            var svgItem = $(this.svg);
-            if(svgItem.length > 1){
-                svgItem = svgItem[svgItem.length - 1];
-                svgItem = $(svgItem);
-            }
-            this.svgData = svgItem.attr('width', '100%').addClass(this.class_uid).attr('height','auto').prop('outerHTML');
+            this.fetchSVG();
         },
 
         methods: {
+
+            fetchSVG(){
+                let inst = this;
+                axios.post('/illustration/svg/fetch', {
+                    svg : this.svg
+                })
+                .then(function(response){
+                    var svgItem = $(response.data.svg);
+                    if(svgItem.length > 1){
+                        svgItem = svgItem[svgItem.length - 1];
+                        svgItem = $(svgItem);
+                    }
+                    inst.svgData = svgItem.attr('width', '100%').addClass(inst.class_uid).attr('height','auto').prop('outerHTML');
+                })
+                .catch(function(error){
+                    console.log('Could not load SVG');
+                    console.log(error);
+                })
+            },
+
             save(type){
                 let _SVG = $("."+this.class_uid);
                 if (type=="SVG"){

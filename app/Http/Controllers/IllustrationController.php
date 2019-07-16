@@ -10,7 +10,7 @@ class IllustrationController extends Controller
     function _makeIllustration($ill){
         $_illustration = [
             'id' => $ill->id,
-            'svg' => file_get_contents(public_path().$ill->svg),
+            'svg' => $ill->svg,
             'title' => $ill->title,
             'catagory' => $ill->IllustrationCatagory->name,
             'color_slots' => [],
@@ -28,6 +28,15 @@ class IllustrationController extends Controller
             ];
         }
         return $_illustration;
+    }
+
+    public function getSVG(){
+        if(request()->has('svg')){
+            $svg = request()->svg;
+        }
+        return [
+            'svg' => file_get_contents(public_path().$svg),
+        ];
     }
 
     public function getIllustrations($number_of_items){
@@ -58,17 +67,33 @@ class IllustrationController extends Controller
 
     public function searchIllustration($search){
         $illustrations = [];
+        $illustration_ids = [];
         foreach(\App\Illustration::where('title', 'Like', '%'.$search.'%')->get() as $item){
+            if(in_array($item->id, $illustration_ids)){
+                continue;
+            }
+            $illustration_ids[] = $item->id;
             $illustrations[] = $this->_makeIllustration($item);
         }
+
         foreach(\App\IllustrationKeyword::where('name', 'Like', '%'.$search.'%')->get() as $item){
+            if(in_array($item->id, $illustration_ids)){
+                continue;
+            }
+            $illustration_ids[] = $item->id;
             $illustrations[] = $this->_makeIllustration($item->Illustration);
         }
+
         foreach(\App\IllustrationCatagory::where('name', 'Like', '%'.$search.'%')->get() as $item){
             foreach($item->Illustration as $_item){
+                if(in_array($_item->id, $illustration_ids)){
+                    continue;
+                }
+                $illustration_ids[] = $_item->id;
                 $illustrations[] = $this->_makeIllustration($_item);
             }
         }
+
         return $illustrations;
     }
 

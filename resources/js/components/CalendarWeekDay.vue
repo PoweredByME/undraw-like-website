@@ -1,6 +1,6 @@
 <template>
     <div :class="['p-1', 'mb-3',]" style="
-        flex-grow:1;
+        flex:1;
         flex-basis:100%
     ">
         <div :class="['p-2', 'day-container', todayShadowClass, monthly ? 'monthly' : '']">

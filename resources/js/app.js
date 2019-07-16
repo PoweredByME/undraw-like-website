@@ -24,7 +24,6 @@ import VueObserveVisibility from 'vue-observe-visibility'
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('calendar-component', require('./components/Calendar.vue').default);
 Vue.component('calendar-controller', require('./components/CalendarController.vue').default);
 Vue.component('calendar-controller-btn', require('./components/CalendarControllerBtn.vue').default);

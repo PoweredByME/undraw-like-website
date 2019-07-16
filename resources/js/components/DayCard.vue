@@ -1,19 +1,22 @@
 <template>
-    <div>
+    <div style="width:inherit">
         <a href="#" @click.prevent='viewModal' style="text-decoration:none;">
             <div class=" shadow-sm day-card-container">
                 <div v-if="video && !month" style="position:relative">
-                    <img :src="videoBackgroundImage" width="100%"/>
+                    <img style="background-color:white" :src="videoBackgroundImage" width="100%"/>
                     <div class="day-card-play-container">
                         <i class="fa fa-play-circle" style="font-size:60px;color:white;opacity:0.95"></i>
                     </div>
                 </div>
+                <div v-if="videoBackgroundImage != null && videoBackgroundImage.length > 0 && !video && !month" style="position:relative">
+                    <img style="background-color:white" :src="videoBackgroundImage" width="100%"/>
+                </div>
                 <div v-if="video" :class="['day-card-text-container', 'calendar-text-dark', 'pt-2', 'pb-2', month ? 'no-video' : '']">
                     <p class="text-center mb-1 mt-1 calendar-text-red" v-if="month"><i class="fa fa-play-circle" style="font-size:24px"></i></p>
-                    <p class="text-center mb-1 mt-1 text-truncate">{{ text }}</p>
+                    <p class="text-center mb-1 mt-1 text-truncate text-wrap mx-2">{{ text }}</p>
                 </div>
                 <div v-else :class="['day-card-text-container', 'calendar-text-dark', 'pt-2', 'pb-2', 'no-video']">
-                    <p class="text-center mb-1 mt-1 text-truncate">{{ text }}</p>
+                    <p class="text-center mb-1 mt-1 text-truncate text-wrap mx-2">{{ text }}</p>
                 </div>
             </div>
         </a>
@@ -31,7 +34,18 @@
                     border-radius:5px;
                 " class="shadow p-5 pb-2">
                     <h1 class="text-center mb-4 calendar-text-dark">{{ text }}</h1>
-                    <p class="m-0 text-justify calendar-text-dark">{{ description }}</p>
+                    <p class="m-0 mb-3 text-justify calendar-text-dark">{{ description }}</p>
+                    <div v-if="videoBackgroundImage != null && videoBackgroundImage.length > 0 && videoBackgroundImageURL && videoBackgroundImageURL.length > 0" class="mb-3 d-flex align-item-center justify-content-end">
+                        <a :href="videoBackgroundImageURL" target="_blank" class="btn btn-light text-dark" role="btn">
+                            <i class="fa fa-image mr-2"></i> View Source
+                        </a>
+                    </div>
+                    <div class="mt-2 d-flex align-items-center flex-wrap justify-content-end">
+                        <a :href='"https://www.facebook.com/sharer/sharer.php?u=" + redirectTo' role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #3b5998 !important"><i class="fa fa-facebook mr-2"></i>Facebook</a>
+                        <a :href='"https://twitter.com/intent/tweet?url=" + redirectTo' role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #1DA1F2 !important"><i class="fa fa-twitter mr-2"></i>Twitter</a>
+                        <a :href='"https://plus.google.com/share?url==" + redirectTo' role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #d34836 !important"><i class="fa fa-google-plus mr-2"></i>Google Plus</a>
+                        <a :href='"https://www.linkedin.com/shareArticle?mini=true&url=" + redirectTo' role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #0077b5 !important"><i class="fa fa-linkedin mr-2"></i>Linked In</a>
+                    </div>
                     <p class="mb-3"></p>
                 </div>
             </div>
@@ -151,7 +165,6 @@
 
     .day-card-text-container{
         background:white;
-
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
         transition-property: all;

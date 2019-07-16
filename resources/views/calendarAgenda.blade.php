@@ -19,7 +19,13 @@
                     border-radius:5px;
                 " class="shadow p-5 pb-2">
                     <h1 class="text-center mb-4 calendar-text-dark">{{ $agenda['text'] }}</h1>
-                    <p class="m-0 text-justify calendar-text-dark">{{ $agenda['description'] }}</p>
+                    <p class="m-0 mb-3 text-justify calendar-text-dark">{{ $agenda['description'] }}</p>
+                    <div class="mt-2 d-flex align-items-center flex-wrap justify-content-end">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ $agenda["redirectTo"] }}" role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #3b5998 !important"><i class="fa fa-facebook mr-2"></i>Facebook</a>
+                        <a href="https://twitter.com/intent/tweet?url={{ $agenda["redirectTo"] }}" role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #1DA1F2 !important"><i class="fa fa-twitter mr-2"></i>Twitter</a>
+                        <a href="https://plus.google.com/share?url=={{ $agenda["redirectTo"] }}" role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #d34836 !important"><i class="fa fa-google-plus mr-2"></i>Google Plus</a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ $agenda["redirectTo"] }}" role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #0077b5 !important"><i class="fa fa-linkedin mr-2"></i>Linked In</a>
+                    </div>
                     <p class="mb-3"></p>
                 </div>
             </div>

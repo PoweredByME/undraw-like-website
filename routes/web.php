@@ -29,7 +29,6 @@ Route::delete('/admin/illustration/catagory/{catagory_id}/{user_id}', 'AdminCont
 Route::patch('/admin/illustration/edit/{illustrations_id}/{user_id}', 'AdminController@editIllustration')->middleware('admin');
 
 
-
 Route::get('/calendar', function(){return view('myCalendar');});
 Route::get('/calendar/week/{date}', 'CalendarController@getWeek');
 Route::get('/calendar/month/{date}', 'CalendarController@getMonth');
@@ -42,6 +41,7 @@ Route::get('/assets/illustration/{number_of_items}', 'IllustrationController@get
 Route::get('/illustration/{slug}', 'IllustrationController@showIllustration');
 Route::post('/illustration/{slug}', 'IllustrationController@fetchIllustration');
 Route::get('/illustration/search/{search}', 'IllustrationController@searchIllustration');
+Route::post('/illustration/svg/fetch', 'IllustrationController@getSVG');
 
 
 

@@ -3,7 +3,8 @@
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
                     <div class="ill-svg-container d-flex align-items-center justify-content-center p-2 pt-5 pb-5">
-                        <div style="cursor:pointer" v-html='svg'></div>
+                        <div style="cursor:pointer" v-if='svgLoaded' v-html='svg'></div>
+                        <p v-else style="text-center">Loading. <br> Please, wait...</p>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
@@ -84,6 +85,7 @@
             return {
                 item:null,
                 svg : null,
+                svgLoaded : false,
                 colors: {hex8 : "#324534FF"},
                 selectedColorID:'',
                 svgEventsAttached: false,
@@ -98,26 +100,8 @@
             .then(function(response){
                 inst.selectedColorID = '';
                 inst.item = response.data;
-                var svgItem = $(inst.item.svg);
-                if(svgItem.length > 1){
-                    svgItem = svgItem[svgItem.length - 1];
-                    svgItem = $(svgItem);
-                }
-                inst.svg = svgItem.attr('width', '100%').attr('height','auto').prop('outerHTML');
-                //inst.item.color_slots = [ inst.item.color_slots[0] ];
-                //inst.item.color_slots[0].color_id = 'color-entire-image';
-                //inst.selectedColorID = inst.item.color_slots[0] ? inst.item.color_slots[0].color_id : '';
-            }).then(function(){
-                inst.item.color_slots.forEach(element => {
-                    $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
-                });
-                if(inst.selectedColorID != ''){
-                    inst.colors = {hex : $('.' + inst.selectedColorID).attr('fill')};
-                }
-                inst.item.color_slots.forEach(element => {
-                    $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
-                    $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
-                });
+                inst.svg = inst.item.svg;
+                inst.fetchSVG();
             })
             .catch(function(error){
                 alert('Could not reach the serve or load the data. Please check your connectivity. We are sorry for your inconvenience.')
@@ -126,7 +110,7 @@
         },
 
         updated() {
-            if(!this.svgEventsAttached){
+            if(this.svgLoaded && !this.svgEventsAttached){
                 let _i = 1;
                 let _CSEN = 'element-';
                 let inst = this;
@@ -148,9 +132,7 @@
             colors: function(newVal, oldVal){
                 if(!newVal || !oldVal) return;
                 var oldEdit = $('.' + this.selectedColorID).attr('fill');
-                $('.' + this.selectedColorID).attr('fill', newVal.hex8).find('*').each(function(){
-                    //$('svg').find($(this)).attr('fill', newVal.hex8);
-                });
+                $('.' + this.selectedColorID).attr('fill', newVal.hex8);
                 var newEdit = $('.' + this.selectedColorID).attr('fill');
 
                 let inst = this;
@@ -171,12 +153,46 @@
 
         methods:{
 
+            fetchSVG(){
+                let inst = this;
+                axios.post('/illustration/svg/fetch', {
+                    svg : this.svg
+                })
+                .then(function(response){
+                    var svgItem = $(response.data.svg);
+                    if(svgItem.length > 1){
+                        svgItem = svgItem[svgItem.length - 1];
+                        svgItem = $(svgItem);
+                    }
+                    inst.svg = svgItem.attr('width', '100%').addClass(inst.class_uid).attr('height','auto').prop('outerHTML');
+                    inst.svgLoaded = true;
+                })
+                .then(function(){
+                    inst.item.color_slots.forEach(element => {
+                        console.log('he');
+                        $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
+                    });
+                    if(inst.selectedColorID != ''){
+                        inst.colors = {hex : $('.' + inst.selectedColorID).attr('fill')};
+                    }
+                    inst.item.color_slots.forEach(element => {
+                        $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
+                        $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
+                    });
+                })
+                .catch(function(error){
+                    console.log('Could not load SVG');
+                    console.log(error);
+                })
+            },
+
             onSelectColor(color_id){
                 this.selectedColorID = color_id;
                 this.colors = {hex : $('.' + this.selectedColorID).attr('fill')};
             },
 
             save(type){
+                if(!svgLoaded) return;
                 let _SVG = $('svg');
                 if (type=="SVG"){
                     this.saveSvg(_SVG, 'image.svg');
