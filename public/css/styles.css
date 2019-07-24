@@ -101,12 +101,16 @@ body.no-scroll{
 
 .search-container{
     display: block;
-    width: 233px;
+    min-width: 233px;
+    width : 100vw;
+    max-width: 460px;
     position: relative;
 }
 
 .search-dropdown{
-    width:233px;
+    min-width: 233px;
+    width : 100vw;
+    max-width: 460px;
     position: absolute;
     z-index:100;
     max-height: 250px;
@@ -135,7 +139,9 @@ body.no-scroll{
 
 .search-input-container{
     border-radius: 5px;
-    border: 1px solid #e9f2f9
+    height : 50px;
+    border: 1px solid #e9f2f9;
+    justify-content: space-between;
 }
 
 .search-input-container button{
@@ -145,6 +151,7 @@ body.no-scroll{
 
 #search-input{
     border:none;
+    width: 100%;
 }
 
 .search-container.mobile{

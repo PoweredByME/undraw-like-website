@@ -28,6 +28,19 @@
                                     <i :class='["fa", cs.color_id == selectedColorID ? "fa-square" : "fa-circle"]'></i>
                                     </button>
                                 </div>
+                                <div>
+                                    <button
+                                        role="btn"
+                                        v-for="cs in ecgNameList"
+                                        :key="cs.id"
+                                        :class='["color-btn mr-3 p-0 mb-1", cs == selectedColorID ? "color-btn-selected" : "", "edit-btn-" + cs]'
+                                        :edit-data="cs"
+                                        @click = "onSelectColor(cs)"
+                                        title="Select this to edit the referenced elements of the Image"
+                                    >
+                                    <i :class='["fa", cs == selectedColorID ? "fa-square" : "fa-circle"]' :style='"color : " + (elementColorGroup[cs].color == null || elementColorGroup[cs].color.includes("#fff") ? "#eee" : elementColorGroup[cs].color)'></i>
+                                    </button>
+                                </div>
                                 <div v-if="selectedColorID.length > 0" class="d-flex flex-wrap mt-3">
                                     <div class="mb-3 mr-3">
                                         <sketch-picker  class="" v-model="colors" :presetColors="[
@@ -50,13 +63,13 @@
                                                                                                     ]"
                                         />
                                     </div>
-                                <div>
-                                    <button v-if="editHistory.length > 0" @click="undoEdit()"  class="dl-svg-btn undo-btn mr-2 mb-2" role='btn'><i class="fa fa-undo mr-2"></i>Undo Changes</button>
-                                </div>
+
                                 </div>
                             </div>
                             <div class="mb-3 mt-3">
                                 <div>
+                                    <button v-if="editHistory.length > 0" @click="undoEdit()"  class="dl-svg-btn undo-btn mr-2 mb-2" role='btn'><i class="fa fa-undo mr-2"></i>Undo Changes</button>
+                                    <br v-if="editHistory.length > 0">
                                     <button @click="save('SVG')"  class="dl-svg-btn mr-2 mb-2" role='btn'><i class="fa fa-download mr-2"></i>Download SVG</button>
                                     <button @click="save('PNG')"  class="dl-svg-btn mr-2 mb-2" role='btn'><i class="fa fa-download mr-2"></i>Download PNG</button>
                                 </div>
@@ -90,6 +103,8 @@
                 selectedColorID:'',
                 svgEventsAttached: false,
                 editHistory: [],
+                elementColorGroup : {},
+                ecgNameList : [],
             };
         },
 
@@ -113,17 +128,38 @@
             if(this.svgLoaded && !this.svgEventsAttached){
                 let _i = 1;
                 let _CSEN = 'element-';
+                let color2el = {};
+                let colorArr = [];
                 let inst = this;
                 $('svg').find("*").each(function(){
                     var el = $('svg').find($(this));
                     //el.addClass('color-all');
                     if(!el.attr('fill')) return;
-                    el.addClass(el.attr('id'));
-                    el.addClass(_CSEN + _i);
+                    if(el.attr('id')){
+                        el.addClass(el.attr('id'));
+                    }
+                    let g_class = _CSEN + _i;
+                    let fill = el.attr('fill');
+                    el.addClass(g_class);
                     el.click(function(){
                         inst.onSelectColor(el.attr('class').split(' ').pop());
                     })
+                    if(!colorArr.includes(el.attr('fill'))){
+                        colorArr.push(el.attr('fill'));
+                        color2el[el.attr('fill')] =[_CSEN + _i];
+                    }else{
+                        color2el[el.attr('fill')].push(_CSEN + _i);
+                    }
                     _i += 1;
+                });
+                var groupCommonName = 'sys-gce-';
+                colorArr.forEach((element, index) => {
+                    var name = groupCommonName + index;
+                    this.elementColorGroup[name] = {
+                        color : element,
+                        el : color2el[element],
+                    }
+                    this.ecgNameList.push(name);
                 });
                 this.svgEventsAttached = true;
             }
@@ -132,15 +168,26 @@
         watch:{
             colors: function(newVal, oldVal){
                 if(!newVal || !oldVal) return;
-                var oldEdit = $('.' + this.selectedColorID).attr('fill');
-                $('.' + this.selectedColorID).attr('fill', newVal.hex8);
-                var newEdit = $('.' + this.selectedColorID).attr('fill');
+                if(this.selectedColorID.includes('sys-gce-')){
+                    var oldEdit = this.elementColorGroup[this.selectedColorID].color;
+                    this.elementColorGroup[this.selectedColorID].el.forEach((element, index) => {
+                        $("." + element).attr('fill', newVal.hex8);
+                    })
+                    this.elementColorGroup[this.selectedColorID].color = newVal.hex8;
+                    var newEdit = this.elementColorGroup[this.selectedColorID].color;
 
-                let inst = this;
-                inst.item.color_slots.forEach(element => {
-                    $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
-                    $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
-                });
+                }else{
+                    var oldEdit = $('.' + this.selectedColorID).attr('fill');
+                    $('.' + this.selectedColorID).attr('fill', newVal.hex8);
+                    var newEdit = $('.' + this.selectedColorID).attr('fill');
+
+                    let inst = this;
+                    inst.item.color_slots.forEach(element => {
+                        $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
+                        $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
+                    });
+                }
+
 
                 this.editHistory.push({
                     item : this.selectedColorID,
@@ -189,7 +236,12 @@
 
             onSelectColor(color_id){
                 this.selectedColorID = color_id;
-                this.colors = {hex : $('.' + this.selectedColorID).attr('fill')};
+                if(this.selectedColorID.includes('sys-gce-')){
+                    this.colors = {hex : this.elementColorGroup[this.selectedColorID].color};
+                }else{
+                    this.colors = {hex : $('.' + this.selectedColorID).attr('fill')};
+                }
+
             },
 
             save(type){
@@ -220,15 +272,22 @@
             undoEdit(){
                 var edit = this.editHistory.pop();
                 if(!edit) return;
-                $('.' + edit.item).attr('fill', edit.oldEdit).find('*').each(function(){
-                    $('svg').find($(this)).attr('fill', edit.oldEdit);
-                });
+                if(edit.item.includes('sys-gce-')){
+                    this.elementColorGroup[edit.item].el.forEach((element, index) => {
+                        $("." + element).attr('fill', edit.oldEdit);
+                    });
+                    this.elementColorGroup[edit.item].color = edit.oldEdit;
+                }else{
+                    $('.' + edit.item).attr('fill', edit.oldEdit).find('*').each(function(){
+                        $('svg').find($(this)).attr('fill', edit.oldEdit);
+                    });
 
-                let inst = this;
-                inst.item.color_slots.forEach(element => {
-                    $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
-                    $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
-                });
+                    let inst = this;
+                    inst.item.color_slots.forEach(element => {
+                        $('.edit-btn-' + element.color_id + " i").css('color', $("." + element.color_id).attr('fill'));
+                        $('.edit-btn-' + element.color_id + " span").html($("." + element.color_id).attr('fill'));
+                    });
+                }
                 if (this.editHistory.length < 1) this.selectedColorID = "";
             }
         },
@@ -268,8 +327,6 @@
         padding-bottom: 8px;
         padding-left: 16px;
         padding-right: 16px;
-        border-radius: 24px;
-
     }
 
     .undo-btn:hover{

@@ -23,7 +23,7 @@
             <div v-if="showEditColors"  class="d-flex align-items-center justify-content-center px-2 my-1" style="background:#ffffff99;border-radius:5px;border:1px solid #cacaca">
                 <button
                             role="btn"
-                            v-for="cs in [0,1,2]"
+                            v-for="cs in [0,1,2,3,4]"
                             :key="cs"
                             :class='["color-btn mx-1 p-0", cs == selectedColorIdx ? "color-btn-selected" : "", "edit-btn-" + selectedColorID_1[cs].ref.substr(1)]'
                             :edit-data="cs"
@@ -83,16 +83,22 @@ import { setTimeout } from 'timers';
                     {ref : '.color-1', color : null},
                     {ref : '.color-2', color : null},
                     {ref : '.color-3', color : null},
+                    {ref : '.color-4', color : null},
+                    {ref : '.color-5', color : null},
                 ],
                 selectedColorID_2: [
                     {ref : '.color_x5F_1', color : null},
                     {ref : '.color_x5F_2', color : null},
                     {ref : '.color_x5F_3', color : null},
+                    {ref : '.color_x5F_4', color : null},
+                    {ref : '.color_x5F_5', color : null},
                 ],
                 selectedColorID_3: [
                     {ref : '.color_1', color : null},
                     {ref : '.color_2', color : null},
                     {ref : '.color_3', color : null},
+                    {ref : '.color_4', color : null},
+                    {ref : '.color_5', color : null},
                 ],
                 selectedColorIdx : null,
                 editHistory: [],
