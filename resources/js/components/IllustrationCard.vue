@@ -62,6 +62,13 @@
                         svgItem = svgItem[svgItem.length - 1];
                         svgItem = $(svgItem);
                     }
+                    svgItem.find("*").each(function(el){
+                        var el = svgItem.find($(this));
+                        var el_id = el.attr('id');
+                        if(el_id){
+                            el.addClass(el_id);
+                        }
+                    })
                     inst.svgData = svgItem.attr('width', '100%').addClass(inst.class_uid).attr('height','auto').prop('outerHTML');
                 })
                 .catch(function(error){

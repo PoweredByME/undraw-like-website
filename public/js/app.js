@@ -2506,6 +2506,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     month: {
@@ -2628,6 +2629,14 @@ __webpack_require__.r(__webpack_exports__);
           svgItem = $(svgItem);
         }
 
+        svgItem.find("*").each(function (el) {
+          var el = svgItem.find($(this));
+          var el_id = el.attr('id');
+
+          if (el_id) {
+            el.addClass(el_id);
+          }
+        });
         inst.svgData = svgItem.attr('width', '100%').addClass(inst.class_uid).attr('height', 'auto').prop('outerHTML');
       })["catch"](function (error) {
         console.log('Could not load SVG');
@@ -2788,6 +2797,7 @@ __webpack_require__.r(__webpack_exports__);
         var el = $('svg').find($(this)); //el.addClass('color-all');
 
         if (!el.attr('fill')) return;
+        el.addClass(el.attr('id'));
         el.addClass(_CSEN + _i);
         el.click(function () {
           inst.onSelectColor(el.attr('class').split(' ').pop());
@@ -2858,7 +2868,7 @@ __webpack_require__.r(__webpack_exports__);
       };
     },
     save: function save(type) {
-      if (!svgLoaded) return;
+      if (!this.svgLoaded) return;
 
       var _SVG = $('svg');
 
@@ -2992,23 +3002,33 @@ __webpack_require__.r(__webpack_exports__);
       illustrations: [],
       next_page_url: '/assets/illustration/5',
       selectedColorID_1: [{
-        ref: '.color-0',
-        color: null
-      }, {
         ref: '.color-1',
         color: null
       }, {
         ref: '.color-2',
         color: null
+      }, {
+        ref: '.color-3',
+        color: null
       }],
       selectedColorID_2: [{
-        ref: '.color_0',
+        ref: '.color_x5F_1',
         color: null
       }, {
+        ref: '.color_x5F_2',
+        color: null
+      }, {
+        ref: '.color_x5F_3',
+        color: null
+      }],
+      selectedColorID_3: [{
         ref: '.color_1',
         color: null
       }, {
         ref: '.color_2',
+        color: null
+      }, {
+        ref: '.color_3',
         color: null
       }],
       selectedColorIdx: null,
@@ -3030,9 +3050,10 @@ __webpack_require__.r(__webpack_exports__);
         inst.next_page_url = null;
 
         for (var i = 0; i < inst.selectedColorID_1.length; i++) {
-          if (inst.selectedColorID_1[i].color && inst.selectedColorID_2[i].color) {
+          if (inst.selectedColorID_1[i].color && inst.selectedColorID_2[i].color && inst.selectedColorID_3[i].color) {
             $(inst.selectedColorID_1[i].ref).attr('fill', inst.selectedColorID_1[i].color);
             $(inst.selectedColorID_2[i].ref).attr('fill', inst.selectedColorID_2[i].color);
+            $(inst.selectedColorID_3[i].ref).attr('fill', inst.selectedColorID_3[i].color);
           }
         }
       })["catch"](function (error) {
@@ -3045,10 +3066,12 @@ __webpack_require__.r(__webpack_exports__);
       var inst = this;
 
       if (inst.selectedColorIdx != null) {
-        var selectedColorEl = $(this.selectedColorID_1[this.selectedColorIdx].ref).length > 0 ? $(this.selectedColorID_1[this.selectedColorIdx].ref) : $(this.selectedColorID_2[this.selectedColorIdx].ref).length > 0 ? $(this.selectedColorID_2[this.selectedColorIdx].ref) : null;
+        var selectedColorEl = $(this.selectedColorID_1[this.selectedColorIdx].ref).length > 0 ? $(this.selectedColorID_1[this.selectedColorIdx].ref) : $(this.selectedColorID_2[this.selectedColorIdx].ref).length > 0 ? $(this.selectedColorID_2[this.selectedColorIdx].ref) : $(this.selectedColorID_3[this.selectedColorIdx].ref).length > 0 ? $(this.selectedColorID_3[this.selectedColorIdx].ref) : null;
+        if (!selectedColorEl) return;
         var oldEdit = selectedColorEl.attr('fill');
         $(inst.selectedColorID_1[inst.selectedColorIdx].ref).attr('fill', inst.selectedColorID_1[inst.selectedColorIdx].color);
         $(inst.selectedColorID_2[inst.selectedColorIdx].ref).attr('fill', inst.selectedColorID_2[inst.selectedColorIdx].color);
+        $(inst.selectedColorID_3[inst.selectedColorIdx].ref).attr('fill', inst.selectedColorID_3[inst.selectedColorIdx].color);
         var newEdit = inst.selectedColorID_1[inst.selectedColorIdx].color;
         $(".edit-btn-" + inst.selectedColorID_1[inst.selectedColorIdx].ref.substr(1) + " i").css('color', inst.selectedColorID_1[inst.selectedColorIdx].color);
 
@@ -3070,7 +3093,7 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
-      var selectedColorEl = $(this.selectedColorID_1[this.selectedColorIdx]).length > 0 ? $(this.selectedColorID_1[this.selectedColorIdx].ref) : $(this.selectedColorID_2[this.selectedColorIdx].ref).length > 0 ? $(this.selectedColorID_2[this.selectedColorIdx].ref) : null;
+      var selectedColorEl = $(this.selectedColorID_1[this.selectedColorIdx]).length > 0 ? $(this.selectedColorID_1[this.selectedColorIdx].ref) : $(this.selectedColorID_2[this.selectedColorIdx].ref).length > 0 ? $(this.selectedColorID_2[this.selectedColorIdx].ref) : $(this.selectedColorID_3[this.selectedColorIdx].ref).length > 0 ? $(this.selectedColorID_3[this.selectedColorIdx].ref) : null;
 
       if (selectedColorEl) {
         this.colors = {
@@ -3092,9 +3115,10 @@ __webpack_require__.r(__webpack_exports__);
         inst.next_page_url = data.next_page_url;
 
         for (var i = 0; i < inst.selectedColorID_1.length; i++) {
-          if (inst.selectedColorID_1[i].color && inst.selectedColorID_2[i].color) {
+          if (inst.selectedColorID_1[i].color && inst.selectedColorID_2[i].color && inst.selectedColorID_3[i].color) {
             $(inst.selectedColorID_1[i].ref).attr('fill', inst.selectedColorID_1[i].color);
             $(inst.selectedColorID_2[i].ref).attr('fill', inst.selectedColorID_2[i].color);
+            $(inst.selectedColorID_3[i].ref).attr('fill', inst.selectedColorID_3[i].color);
           }
         }
       })["catch"](function (error) {
@@ -3115,6 +3139,7 @@ __webpack_require__.r(__webpack_exports__);
       this.selectedColorIdx = edit.idx;
       this.selectedColorID_1[this.selectedColorIdx].color = edit.oldEdit;
       this.selectedColorID_2[this.selectedColorIdx].color = edit.oldEdit;
+      this.selectedColorID_3[this.selectedColorIdx].color = edit.oldEdit;
       this.editSVG(true);
       if (this.editHistory.length < 1) this.selectedColorIdx = null;
     }
@@ -3135,6 +3160,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.selectedColorIdx != null) {
         this.selectedColorID_1[this.selectedColorIdx].color = newVal.hex8;
         this.selectedColorID_2[this.selectedColorIdx].color = newVal.hex8;
+        this.selectedColorID_3[this.selectedColorIdx].color = newVal.hex8;
         this.editSVG();
       }
     }
@@ -40169,14 +40195,25 @@ var render = function() {
         },
         [
           _c("div", { staticClass: " shadow-sm day-card-container" }, [
-            _vm.video && !_vm.month
+            _vm.video && !_vm.month && _vm.videoBackgroundImage
               ? _c("div", { staticStyle: { position: "relative" } }, [
                   _c("img", {
                     staticStyle: { "background-color": "white" },
                     attrs: { src: _vm.videoBackgroundImage, width: "100%" }
                   }),
                   _vm._v(" "),
-                  _vm._m(0)
+                  _vm.videoBackgroundImage
+                    ? _c("div", { staticClass: "day-card-play-container" }, [
+                        _c("i", {
+                          staticClass: "fa fa-play-circle",
+                          staticStyle: {
+                            "font-size": "60px",
+                            color: "white",
+                            opacity: "0.95"
+                          }
+                        })
+                      ])
+                    : _vm._e()
                 ])
               : _vm._e(),
             _vm._v(" "),
@@ -40206,6 +40243,22 @@ var render = function() {
                   },
                   [
                     _vm.month
+                      ? _c(
+                          "p",
+                          {
+                            staticClass:
+                              "text-center mb-1 mt-1 calendar-text-red"
+                          },
+                          [
+                            _c("i", {
+                              staticClass: "fa fa-play-circle",
+                              staticStyle: { "font-size": "24px" }
+                            })
+                          ]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    !_vm.month && _vm.video && !_vm.videoBackgroundImage
                       ? _c(
                           "p",
                           {
@@ -40686,19 +40739,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "day-card-play-container" }, [
-      _c("i", {
-        staticClass: "fa fa-play-circle",
-        staticStyle: { "font-size": "60px", color: "white", opacity: "0.95" }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -54778,15 +54819,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************************!*\
   !*** ./resources/js/components/Illustrations.vue ***!
   \***************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Illustrations_vue_vue_type_template_id_4e371748___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Illustrations.vue?vue&type=template&id=4e371748& */ "./resources/js/components/Illustrations.vue?vue&type=template&id=4e371748&");
 /* harmony import */ var _Illustrations_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Illustrations.vue?vue&type=script&lang=js& */ "./resources/js/components/Illustrations.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Illustrations_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Illustrations_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Illustrations_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Illustrations.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/Illustrations.vue?vue&type=style&index=0&lang=css&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Illustrations_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Illustrations.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/Illustrations.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -54818,7 +54858,7 @@ component.options.__file = "resources/js/components/Illustrations.vue"
 /*!****************************************************************************!*\
   !*** ./resources/js/components/Illustrations.vue?vue&type=script&lang=js& ***!
   \****************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

@@ -113,8 +113,11 @@ class CalendarController extends Controller
 
     public function searchAgenda($search){
         $agendas = [];
+        $agenda_ids = [];
         foreach(\App\agendaKeyword::where('name', 'Like', '%'.$search.'%')->get() as $item){
             if(!$item->Agenda) continue;
+            if(in_array($item->Agenda->id, $agenda_ids)) continue;
+            $agenda_ids[] = $item->Agenda->id;
             $carbon = new Carbon($item->Agenda->Day->date);
             $agendas[] = [
                 'agenda' => $this->_makeAgenda($item->Agenda),

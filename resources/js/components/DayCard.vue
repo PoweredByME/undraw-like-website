@@ -2,9 +2,9 @@
     <div style="width:inherit">
         <a href="#" @click.prevent='viewModal' style="text-decoration:none;">
             <div class=" shadow-sm day-card-container">
-                <div v-if="video && !month" style="position:relative">
+                <div v-if="video && !month && videoBackgroundImage" style="position:relative">
                     <img style="background-color:white" :src="videoBackgroundImage" width="100%"/>
-                    <div class="day-card-play-container">
+                    <div v-if="videoBackgroundImage" class="day-card-play-container">
                         <i class="fa fa-play-circle" style="font-size:60px;color:white;opacity:0.95"></i>
                     </div>
                 </div>
@@ -13,6 +13,7 @@
                 </div>
                 <div v-if="video" :class="['day-card-text-container', 'calendar-text-dark', 'pt-2', 'pb-2', month ? 'no-video' : '']">
                     <p class="text-center mb-1 mt-1 calendar-text-red" v-if="month"><i class="fa fa-play-circle" style="font-size:24px"></i></p>
+                    <p class="text-center mb-1 mt-1 calendar-text-red" v-if="!month && video && !videoBackgroundImage"><i class="fa fa-play-circle" style="font-size:24px"></i></p>
                     <p class="text-center mb-1 mt-1 text-truncate text-wrap mx-2">{{ text }}</p>
                 </div>
                 <div v-else :class="['day-card-text-container', 'calendar-text-dark', 'pt-2', 'pb-2', 'no-video']">

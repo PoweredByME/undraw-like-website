@@ -64,6 +64,7 @@ class AdminController extends Controller
             "keyword2" => 8,
             "keyword3" => 9,
             "keyword4" => 10,
+            "repeat" => 11,
         ];
         foreach ($reader->getRecords() as $index => $row) {
             if($firstRow){
@@ -118,6 +119,10 @@ class AdminController extends Controller
                 }
             }
 
+            if($row[$i['repeat']] != ''){
+                $this->_repeatAgenda_10_year($agenda);
+            }
+
         }
 
 
@@ -151,18 +156,25 @@ class AdminController extends Controller
             'description' => $data['description'],
         ]);
 
-        if(request()->has('videoURL') && request()->has('videoBackgroundImage')){
+        if(request()->has('videoURL') && request()->videoURL != null && count(request()->videoURL) > 0){
             $agenda->videoURL = request()->videoURL;
+            $agenda->video = true;
+        }else{
+            $agenda->video = false;
+        }
+
+        if(request()->has('videoBackgroundImage')){
             $image = request()->videoBackgroundImage;
             $publicPath = "agendaImages";
             $filename = $image->hashName();
             $image->move($publicPath, $filename);
             $image_path = "/". $publicPath."/". $filename;
             $agenda->videoBackgroundImage = $image_path;
-            $agenda->video = true;
             $agenda->videoBackgroundImageURL = request()->videoBackgroundImageURL;
-            $agenda->save();
         }
+
+        $agenda->save();
+
 
         for($i=0;$i<5;$i++){
             if(request()->get('keyword_'.$i) != null){
@@ -173,9 +185,58 @@ class AdminController extends Controller
             }
         }
 
+
+        if (request()->has('repeat')){
+            $this->_repeatAgenda_10_year($agenda);
+        }
+
         request()->session()->flash('success', 'New agenda has been created ('.$data["date"].')');
         return back();
 
+    }
+
+    function _repeatAgenda_10_year($agenda){
+        $carbon = new Carbon($agenda->Day->date);
+        for($i = 1; $i < 11; $i++){
+
+            $carbon->add(1, 'year');
+            $_date = $carbon->year.'-'.$carbon->month.'-'.$carbon->day;
+            if(!\App\Day::where('date', $_date)->exists())
+            {
+                $day = \App\Day::create([
+                    'date' => $_date,
+                ]);
+            }else{
+                $day = \App\Day::where('date', $_date)->first();
+            }
+
+            $_agenda = \App\Agenda::create([
+                'day_id' => $day->id,
+                'title' => $agenda->title,
+                'description' => $agenda->description,
+
+            ]);
+
+            if($agenda->videoURL){
+                $_agenda->videoURL = request()->videoURL;
+                $_agenda->video = true;
+            }
+
+            if(request()->has('videoBackgroundImage')){
+                $_agenda->videoBackgroundImage = $agenda->videoBackgroundImage;
+                $_agenda->videoBackgroundImageURL = $agenda->videoBackgroundImageURL;
+            }
+
+            $_agenda->save();
+
+
+            foreach($agenda->agendaKeyword as $item){
+                \App\agendaKeyword::create([
+                    'agenda_id' => $_agenda->id,
+                    'name' => $item->name,
+                ]);
+            }
+        }
     }
 
     public function editAgenda($agenda_id, $user_id){

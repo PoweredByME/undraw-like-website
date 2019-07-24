@@ -12,6 +12,10 @@
                     @csrf
                     <p class="m-0">Pick a date</p>
                     <input type="date" name="date" class="form-control" required>
+                    <p class="mb-1 mt-1">
+                            <input type="checkbox" name="repeat" value="1">
+                            Repeat this event for 10 years
+                    </p>
                     <p class="m-0 mt-2">Title</p>
                     <input type="text" name="title" required placeholder="Enter the title of the agenda" class="form-control" />
                     <p class="m-0 mt-2">Description</p>
@@ -32,13 +36,14 @@
             <template v-slot:footer>
                 <button role="btn" class="btn btn-primary" onclick="
                     var form = document.getElementById('add-new-agenda');
-                    if(form.date.value == '' || form.title.value == '' || form.description.value == ''){
+                    form.submit();
+                    /*if(form.date.value == '' || form.title.value == '' || form.description.value == ''){
                         alert('Please fill the required field. (Date, Title and Description)');
                     }else if((form.videoURL.value == '' && form.videoBackgroundImage.value != '') || (form.videoURL.value != '' && form.videoBackgroundImage.value == '')){
                         alert('The fields video url and video background should, both should either be filled or both should be left unfilled');
                     }else{
-                        form.submit();
-                    }
+
+                    }*/
                 ">Submit</button>
             </template>
         </v-modal>
@@ -63,7 +68,7 @@
         <p class="mt-2">
             The header of the the CSV should be of the following formate
             <br>
-            date,title,description,video URL,image,image URL,keyword 1,keyword 2,keyword 3,keyword 4,keyword 5
+            date,title,description,video URL,image,image URL,keyword 1,keyword 2,keyword 3,keyword 4,keyword 5, repeat
         </p>
 
         <div class="mt-5">

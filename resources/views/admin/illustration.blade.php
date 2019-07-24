@@ -199,7 +199,7 @@
                                                 <h4>Illustration Color Tags</h4>
                                                 <p class="mb-1">Please enter 6 color tag (svg element ids) for coloring. For your ease they have been already filled by prerefined value. Feel free to customize them.</p>
                                                 @for($i = 0; $i < 6; $i++)
-                                                    <input type="text" name="color_{{ $i }}" placeholder="Enter the color tag" class="mb-2 form-control" value="color-{{ $i }}"
+                                                    <input type="text" name="color_{{ $i }}" placeholder="Enter the color tag" class="mb-2 form-control"
                                                         value="{{ count($ill->IllustrationColorSlot) > $i ? $ill->IllustrationColorSlot[$i]->color_id : '' }}"
                                                     />
                                                 @endfor

@@ -80,14 +80,19 @@ import { setTimeout } from 'timers';
                 illustrations:[],
                 next_page_url:'/assets/illustration/5',
                 selectedColorID_1: [
-                    {ref : '.color-0', color : null},
                     {ref : '.color-1', color : null},
                     {ref : '.color-2', color : null},
+                    {ref : '.color-3', color : null},
                 ],
                 selectedColorID_2: [
-                    {ref : '.color_0', color : null},
+                    {ref : '.color_x5F_1', color : null},
+                    {ref : '.color_x5F_2', color : null},
+                    {ref : '.color_x5F_3', color : null},
+                ],
+                selectedColorID_3: [
                     {ref : '.color_1', color : null},
                     {ref : '.color_2', color : null},
+                    {ref : '.color_3', color : null},
                 ],
                 selectedColorIdx : null,
                 editHistory: [],
@@ -116,9 +121,12 @@ import { setTimeout } from 'timers';
                     inst.illustrations = data;
                     inst.next_page_url = null;
                     for(var i = 0; i < inst.selectedColorID_1.length; i++){
-                        if(inst.selectedColorID_1[i].color && inst.selectedColorID_2[i].color){
+                        if( inst.selectedColorID_1[i].color
+                            && inst.selectedColorID_2[i].color
+                            && inst.selectedColorID_3[i].color){
                             $(inst.selectedColorID_1[i].ref).attr('fill', inst.selectedColorID_1[i].color);
                             $(inst.selectedColorID_2[i].ref).attr('fill', inst.selectedColorID_2[i].color);
+                            $(inst.selectedColorID_3[i].ref).attr('fill', inst.selectedColorID_3[i].color);
                         }
                     }
                 })
@@ -135,10 +143,14 @@ import { setTimeout } from 'timers';
                                         $(this.selectedColorID_1[this.selectedColorIdx].ref) :
                                         $(this.selectedColorID_2[this.selectedColorIdx].ref).length > 0 ?
                                         $(this.selectedColorID_2[this.selectedColorIdx].ref) :
+                                        $(this.selectedColorID_3[this.selectedColorIdx].ref).length > 0 ?
+                                        $(this.selectedColorID_3[this.selectedColorIdx].ref) :
                                         null;
+                    if(!selectedColorEl) return;
                     let oldEdit = selectedColorEl.attr('fill');
                     $(inst.selectedColorID_1[inst.selectedColorIdx].ref).attr('fill', inst.selectedColorID_1[inst.selectedColorIdx].color);
                     $(inst.selectedColorID_2[inst.selectedColorIdx].ref).attr('fill', inst.selectedColorID_2[inst.selectedColorIdx].color);
+                    $(inst.selectedColorID_3[inst.selectedColorIdx].ref).attr('fill', inst.selectedColorID_3[inst.selectedColorIdx].color);
                     let newEdit = inst.selectedColorID_1[inst.selectedColorIdx].color;
                     $(".edit-btn-" + inst.selectedColorID_1[inst.selectedColorIdx].ref.substr(1) + " i").css('color', inst.selectedColorID_1[inst.selectedColorIdx].color);
                     if(!undo){
@@ -163,6 +175,8 @@ import { setTimeout } from 'timers';
                                         $(this.selectedColorID_1[this.selectedColorIdx].ref) :
                                         $(this.selectedColorID_2[this.selectedColorIdx].ref).length > 0 ?
                                         $(this.selectedColorID_2[this.selectedColorIdx].ref) :
+                                        $(this.selectedColorID_3[this.selectedColorIdx].ref).length > 0 ?
+                                        $(this.selectedColorID_3[this.selectedColorIdx].ref) :
                                         null;
 
 
@@ -183,9 +197,12 @@ import { setTimeout } from 'timers';
                     inst.illustrations = inst.illustrations.concat(data.illustrations);
                     inst.next_page_url = data.next_page_url;
                     for(var i = 0; i < inst.selectedColorID_1.length; i++){
-                        if(inst.selectedColorID_1[i].color && inst.selectedColorID_2[i].color){
+                        if( inst.selectedColorID_1[i].color
+                            && inst.selectedColorID_2[i].color
+                            && inst.selectedColorID_3[i].color){
                             $(inst.selectedColorID_1[i].ref).attr('fill', inst.selectedColorID_1[i].color);
                             $(inst.selectedColorID_2[i].ref).attr('fill', inst.selectedColorID_2[i].color);
+                            $(inst.selectedColorID_3[i].ref).attr('fill', inst.selectedColorID_3[i].color);
                         }
                     }
                 })
@@ -208,6 +225,7 @@ import { setTimeout } from 'timers';
                 this.selectedColorIdx = edit.idx;
                 this.selectedColorID_1[this.selectedColorIdx].color = edit.oldEdit;
                 this.selectedColorID_2[this.selectedColorIdx].color = edit.oldEdit;
+                this.selectedColorID_3[this.selectedColorIdx].color = edit.oldEdit;
                 this.editSVG(true);
                 if (this.editHistory.length < 1) this.selectedColorIdx = null;
             }
@@ -230,6 +248,7 @@ import { setTimeout } from 'timers';
                 if(this.selectedColorIdx  != null){
                     this.selectedColorID_1[this.selectedColorIdx].color = newVal.hex8;
                     this.selectedColorID_2[this.selectedColorIdx].color = newVal.hex8;
+                    this.selectedColorID_3[this.selectedColorIdx].color = newVal.hex8;
                     this.editSVG();
                 }
             }

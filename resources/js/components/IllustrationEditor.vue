@@ -118,6 +118,7 @@
                     var el = $('svg').find($(this));
                     //el.addClass('color-all');
                     if(!el.attr('fill')) return;
+                    el.addClass(el.attr('id'));
                     el.addClass(_CSEN + _i);
                     el.click(function(){
                         inst.onSelectColor(el.attr('class').split(' ').pop());
@@ -192,7 +193,7 @@
             },
 
             save(type){
-                if(!svgLoaded) return;
+                if(!this.svgLoaded) return;
                 let _SVG = $('svg');
                 if (type=="SVG"){
                     this.saveSvg(_SVG, 'image.svg');

@@ -17,8 +17,10 @@ class Agenda extends Model
     }
 
     public function deleteContent(){
-        if($this->videoBackgroundImage == null){return;}
-        if(File::exists(public_path().$this->videoBackgroundImage)){
+        if($this->videoBackgroundImage != null
+            && \App\Agenda::where('videoBackgroundImage', $this->videoBackgroundImage)->count() < 2
+            && File::exists(public_path().$this->videoBackgroundImage))
+        {
             File::delete(public_path().$this->videoBackgroundImage);
         }
         foreach($this->agendaKeyword as $i){$i->delete();}
