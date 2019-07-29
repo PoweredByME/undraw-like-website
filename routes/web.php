@@ -20,7 +20,7 @@ Route::post('/admin/calendar/agenda/{user_id}', 'AdminController@createAgenda')-
 Route::delete('/admin/calendar/agenda/{agenda_id}/{user_id}', 'AdminController@deleteAgenda')->middleware('admin');
 Route::patch('/admin/calendar/agenda/edit/{agenda_id}/{user_id}', 'AdminController@editAgenda')->middleware('admin');
 
-Route::get('/admin/illustrations/{user_id}', 'AdminController@illustrations')->middleware('admin');
+Route::get('/admin/illustrations/{user_id}/{page}', 'AdminController@illustrations')->middleware('admin');
 Route::post('/admin/illustrations/csv/{user_id}', 'AdminController@illustrationImportFromCSV')->middleware('admin');
 Route::post('/admin/illustrations/{user_id}', 'AdminController@createIllustration')->middleware('admin');
 Route::delete('/admin/illustrations/{illustration_id}/{user_id}', 'AdminController@deleteIllustration')->middleware('admin');

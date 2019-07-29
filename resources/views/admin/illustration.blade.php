@@ -136,13 +136,13 @@
 
         <div class="mt-5">
 
-                @foreach(\App\Illustration::all() as $ill)
+                @foreach(\App\Illustration::all()->forPage($page, 10)->all() as $ill)
                     <va-card>
                         <div class="d-flex align-items-center">
                             <p class="m-0">{{ $loop->iteration }}.</p>
                             <div class="ml-3">
                                 <p class="m-0">Title : {{ $ill->title }}</p>
-                                <p class="m-0">Catagory : {{ $ill->IllustrationCatagory->name }}</p>
+                                <p class="m-0">Catagory : {{ $ill->IllustrationCatagory ? $ill->IllustrationCatagory->name : 'null' }}</p>
                                 <p class="m-0">Color Slot ID :
                                     @foreach($ill->IllustrationColorSlot as $item)
                                         {{ $item->color_id }},&nbsp
@@ -182,7 +182,7 @@
                                                 <p class="mb-1">Illustration Catagory</p>
                                                 <select name="illustration_catagory_id" class="mb-2 form-control" required>
                                                     @foreach(\App\IllustrationCatagory::all() as $cat)
-                                                        <option value="{{ $cat->id }}" {{ $cat->id == $ill->IllustrationCatagory->id ? "selected" : ""}}>{{ $cat->name }}</option>
+                                                        <option value="{{ $cat->id }}" {{ $ill->IllustrationCatagory && $cat->id == $ill->IllustrationCatagory->id ? "selected" : ""}}>{{ $cat->name }}</option>
                                                     @endforeach
                                                 </select>
                                                 @component('Master.formValidationError', ['param' => 'illustration_catagory_id'])
@@ -218,6 +218,14 @@
                         </template>
                     </va-card>
                 @endforeach
+
+
+                <div class="d-flex align-items-center justify-content-center p-3">
+                    @for($_i = 1; $_i <= ceil(\App\Illustration::all()->count() / 10); $_i++)
+                        <a href="/admin/illustrations/{{ $loggedInUser->id }}/{{ $_i }}" class="m-1" style="margin:0;padding:0;padding:8px;border-radius:100px;background-color:{{ $page == $_i ? '#212121' : 'orange' }};color:white">{{ $_i }}</a>
+                    @endfor
+                </div>
+
 
         </div>
 

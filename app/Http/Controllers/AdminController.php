@@ -15,7 +15,7 @@ class AdminController extends Controller
     function makeControlOptions($user){
         return collect([
             ['title' => 'Edit Calendar', 'href' => '/admin/calendar/'.$user->id],
-            ['title' => 'Edit Illustrations', 'href' => '/admin/illustrations/'.$user->id],
+            ['title' => 'Edit Illustrations', 'href' => '/admin/illustrations/'.$user->id.'/1'],
         ]);
     }
 
@@ -316,12 +316,13 @@ class AdminController extends Controller
         return back();
     }
 
-    public function illustrations($user_id){
+    public function illustrations($user_id, $page = 1){
         $loggedInUser = $this->verifyUser($user_id);
         return view('admin.illustration', [
             'loggedInUser' => $loggedInUser,
             'requestedUser' => $loggedInUser,
             'options' => $this->makeControlOptions($loggedInUser),
+            'page' => $page,
         ]);
     }
 
@@ -385,8 +386,10 @@ class AdminController extends Controller
                     return back();
                 }
                 $publicPath = "illustrations";
-                $filename = '/' . $publicPath .'/'.microtime(true).'.svg';
-                file_put_contents(public_path($filename), $svg);
+                //$permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+
+                $filename = '/' . $publicPath .'/'.$svg;
+                //file_put_contents(public_path($filename), $svg);
 
                 $ill = \App\Illustration::create([
                     'title' => $row[$i['title']],

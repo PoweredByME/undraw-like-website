@@ -38,7 +38,7 @@
                                         @click = "onSelectColor(cs)"
                                         title="Select this to edit the referenced elements of the Image"
                                     >
-                                    <i :class='["fa", cs == selectedColorID ? "fa-square" : "fa-circle"]' :style='"color : " + (elementColorGroup[cs].color == null || elementColorGroup[cs].color.includes("#fff") ? "#eee" : elementColorGroup[cs].color)'></i>
+                                    <i :class='["fa", cs == selectedColorID ? "fa-square" : "fa-circle"]' :style='"color : " + (elementColorGroup[cs].color == null || elementColorGroup[cs].color.includes("#fff") || elementColorGroup[cs].color.includes("#FFF") ? "#eee" : elementColorGroup[cs].color)'></i>
                                     </button>
                                 </div>
                                 <div v-if="selectedColorID.length > 0" class="d-flex flex-wrap mt-3">

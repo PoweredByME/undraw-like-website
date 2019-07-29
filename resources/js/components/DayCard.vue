@@ -34,6 +34,9 @@
                     color: #343434;
                     border-radius:5px;
                 " class="shadow p-5 pb-2">
+                    <div v-if="videoBackgroundImage" class="mb-5">
+                        <img :src="videoBackgroundImage" style="width:100%; height:auto;border-radius:5px"/>
+                    </div>
                     <h1 class="text-center mb-4 calendar-text-dark">{{ text }}</h1>
                     <p class="m-0 mb-3 text-justify calendar-text-dark">{{ description }}</p>
                     <div v-if="videoBackgroundImage != null && videoBackgroundImage.length > 0 && videoBackgroundImageURL && videoBackgroundImageURL.length > 0" class="mb-3 d-flex align-item-center justify-content-end">
@@ -46,6 +49,11 @@
                         <a :href='"https://twitter.com/intent/tweet?url=" + redirectTo' role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #1DA1F2 !important"><i class="fa fa-twitter mr-2"></i>Twitter</a>
                         <a :href='"https://plus.google.com/share?url==" + redirectTo' role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #d34836 !important"><i class="fa fa-google-plus mr-2"></i>Google Plus</a>
                         <a :href='"https://www.linkedin.com/shareArticle?mini=true&url=" + redirectTo' role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #0077b5 !important"><i class="fa fa-linkedin mr-2"></i>Linked In</a>
+                    </div>
+                    <div class="mb-3 d-flex align-item-center justify-content-end">
+                        <a :href="redirectTo" target="_blank" class="btn btn-dark mr-2 mt-2 mb-5" role="btn">
+                            <i class="fa fa-compass mr-2"></i> Visit Event Page
+                        </a>
                     </div>
                     <p class="mb-3"></p>
                 </div>
@@ -60,6 +68,9 @@
                         background:rgba(255,255,255,0.9);
                     " class="shadow calendar-text-dark pt-5 pl-5 pr-5 pb-3">
                         <div>
+                            <div v-if="videoBackgroundImage" class="mb-5">
+                                <img :src="videoBackgroundImage" style="width:100%; height:auto;border-radius:5px"/>
+                            </div>
                             <h1 class="mb-4 text-dark text-center">{{ text }}</h1>
                             <h4 class="m-0 calendar-text-dark text-justify">{{ description }}</h4>
                         </div>
@@ -72,7 +83,7 @@
                 ">
                     <div class="p-5 mt-5">
                         <div class="d-flex align-items-center justify-content-center">
-                            <iframe width="966" height="360" :src="videoURL" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe width="966" height="360" :src=" videoURL.includes('embed') ? videoURL : ('https://www.youtube.com/embed/' + getId(videoURL))" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                         <h4 class="text-dark text-center mt-3" style="font-weight:600"><i class="fa fa-share-alt mr-2"></i>Share</h4>
                         <div class="mt-2 d-flex align-items-center flex-wrap justify-content-center">
@@ -85,6 +96,11 @@
                         <div v-if="videoBackgroundImageURL && videoBackgroundImageURL.length > 0" class="mt-4 d-flex align-items-center justify-content-center">
                             <a :href="videoBackgroundImageURL" target="_blank" class="btn btn-light text-dark" role="btn">
                                 <i class="fa fa-image mr-2"></i> View Source
+                            </a>
+                        </div>
+                        <div class="mb-3 d-flex align-item-center justify-content-center mt-2">
+                            <a :href="redirectTo" target="_blank" class="btn btn-light text-dark" role="btn">
+                                <i class="fa fa-compass mr-2"></i> Visit Event Page
                             </a>
                         </div>
                     </div>
@@ -156,8 +172,20 @@
 
             viewModal(){
                 this.showModal = true;
+            },
+
+            getId(url) {
+                var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                var match = url.match(regExp);
+                if (match && match[2].length == 11) {
+                    return match[2];
+                } else {
+                    return 'error';
+                }
             }
         },
+
+
 
     }
 </script>

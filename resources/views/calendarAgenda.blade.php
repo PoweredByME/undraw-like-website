@@ -1,5 +1,9 @@
 @extends('Master.A')
 
+@section('meta')
+    <meta property="og:image" content="{{ $agenda['videoBackgroundImage'] }}">
+@endsection()
+
 @section('title', 'Event')
 
 @section('content')
@@ -18,6 +22,11 @@
                     color: #343434;
                     border-radius:5px;
                 " class="shadow p-5 pb-2">
+                    @if($agenda['videoBackgroundImage'])
+                        <div class="mb-5">
+                            <img src="{{ $agenda['videoBackgroundImage'] }}" style="width:100%; height:auto;border-radius:5px"/>
+                        </div>
+                    @endif
                     <h1 class="text-center mb-4 calendar-text-dark">{{ $agenda['text'] }}</h1>
                     <p class="m-0 mb-3 text-justify calendar-text-dark">{{ $agenda['description'] }}</p>
                     <div class="mt-2 d-flex align-items-center flex-wrap justify-content-end">
@@ -26,6 +35,15 @@
                         <a href="https://plus.google.com/share?url=={{ $agenda["redirectTo"] }}" role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #d34836 !important"><i class="fa fa-google-plus mr-2"></i>Google Plus</a>
                         <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ $agenda["redirectTo"] }}" role="btn" class="btn btn-primary mr-2 mt-2" style="border:none;background: #0077b5 !important"><i class="fa fa-linkedin mr-2"></i>Linked In</a>
                     </div>
+
+                    <div class="mt-4 mb-5 d-flex align-items-center justify-content-center">
+                        @if ($agenda['videoBackgroundImageURL'])
+                            <a href="{{ $agenda['videoBackgroundImageURL'] }}" target="_blank" class="btn btn-light text-dark" role="btn">
+                                <i class="fa fa-image mr-2"></i> View Source
+                            </a>
+                        @endif
+                    </div>
+
                     <p class="mb-3"></p>
                 </div>
             </div>
@@ -39,6 +57,11 @@
                         background:rgba(255,255,255,0.9);
                     " class="shadow calendar-text-dark pt-5 pl-5 pr-5 pb-3">
                         <div>
+                            @if($agenda['videoBackgroundImage'])
+                                <div class="mb-5">
+                                    <img src="{{ $agenda['videoBackgroundImage'] }}" style="width:100%; height:auto;border-radius:5px"/>
+                                </div>
+                            @endif
                             <h1 class="mb-4 text-dark text-center">{{ $agenda['text'] }}</h1>
                             <h4 class="m-0 calendar-text-dark text-justify">{{ $agenda['description'] }}</h4>
                         </div>
@@ -51,7 +74,7 @@
                 ">
                     <div class="p-5 mt-5">
                         <div class="d-flex align-items-center justify-content-center">
-                            <iframe width="966" height="360" src="{{ $agenda['videoURL'] }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe class="video-iframe" width="966" height="360" src="{{ $agenda['videoURL'] }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                         <h4 class="text-dark text-center mt-3" style="font-weight:600"><i class="fa fa-share-alt mr-2"></i>Share</h4>
                         <div class="mt-2 d-flex align-items-center flex-wrap justify-content-center">
@@ -80,4 +103,24 @@
             </template>
         </calendar-modal>
     </div>
+
+
+
+    <script>
+        window.onload = function(){
+            $(".video-iframe").attr('src',
+                'https://www.youtube.com/embed/' + getId($('.video-iframe').attr('src'))
+            );
+        }
+
+        function getId(url) {
+            var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            var match = url.match(regExp);
+            if (match && match[2].length == 11) {
+                return match[2];
+            } else {
+                return 'error';
+            }
+        }
+    </script>
 @endsection()
