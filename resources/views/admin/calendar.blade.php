@@ -72,7 +72,7 @@
         </p>
 
         <div class="mt-5">
-            @foreach(\App\Day::all() as $day)
+            @foreach(\App\Day::all()->forPage($page, 10)->all() as $day)
                 <div>
                     <div class="d-flex">
                         <h5 style="background: #323232; color:white;border-radius:5px" class="p-2">{{ $day->date }}</h5>
@@ -143,6 +143,15 @@
                 </div>
             @endforeach
         </div>
+
+
+        <h4>Pages</h4>
+        <div class="d-flex align-items-center justify-content-center flex-wrap p-3">
+                @for($_i = 1; $_i <= ceil(\App\Day::all()->count() / 10); $_i++)
+                    <a href="/admin/calendar/{{ $loggedInUser->id }}/{{ $_i }}" class="m-1" style="margin:0;padding:0;padding:8px;border-radius:100px;background-color:{{ $page == $_i ? '#212121' : 'orange' }};color:white">{{ $_i }}</a>
+                @endfor
+            </div>
+
     </div>
 @endsection()
 

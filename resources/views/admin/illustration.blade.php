@@ -79,6 +79,13 @@
                             </select>
                             @component('Master.formValidationError', ['param' => 'illustration_catagory_id'])
                             @endcomponent()
+                            <p class="mb-1">Illustration Catagory</p>
+                            <select name='type' class="mb-2 form-control" required>
+                                <option value="0" selected>Free</option>
+                                <option value="1">Premium</option>
+                            </select>
+                            @component('Master.formValidationError', ['param' => 'type'])
+                            @endcomponent()
 
                             <h4>Image Keywords</h4>
                             <p class="mb-1">Please enter 5 keywords for the Illustration</p>
@@ -219,8 +226,8 @@
                     </va-card>
                 @endforeach
 
-
-                <div class="d-flex align-items-center justify-content-center p-3">
+                <h4>Pages</h4>
+                <div class="d-flex flex-wrap align-items-center justify-content-center p-3">
                     @for($_i = 1; $_i <= ceil(\App\Illustration::all()->count() / 10); $_i++)
                         <a href="/admin/illustrations/{{ $loggedInUser->id }}/{{ $_i }}" class="m-1" style="margin:0;padding:0;padding:8px;border-radius:100px;background-color:{{ $page == $_i ? '#212121' : 'orange' }};color:white">{{ $_i }}</a>
                     @endfor

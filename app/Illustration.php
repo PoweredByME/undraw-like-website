@@ -45,4 +45,8 @@ class Illustration extends Model
         ];
     }
 
+    public function IllustrationSubscription(){
+        return $this->hasMany(\App\IllustrationSubscription::class);
+    }
+
 }

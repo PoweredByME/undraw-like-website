@@ -14,7 +14,7 @@
 Route::get('/', function () {return redirect('/calendar');});
 Route::get('/admin', function(){return redirect('/admin/home');});
 Route::get('/admin/home/{user_id}', 'AdminController@show')->middleware('admin');
-Route::get('/admin/calendar/{user_id}', 'AdminController@calendar')->middleware('admin');
+Route::get('/admin/calendar/{user_id}/{page}', 'AdminController@calendar')->middleware('admin');
 Route::post('/admin/calendar/csv/{user_id}', 'AdminController@calendarImportFromCSV')->middleware('admin');
 Route::post('/admin/calendar/agenda/{user_id}', 'AdminController@createAgenda')->middleware('admin');
 Route::delete('/admin/calendar/agenda/{agenda_id}/{user_id}', 'AdminController@deleteAgenda')->middleware('admin');

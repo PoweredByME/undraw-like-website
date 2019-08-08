@@ -12,9 +12,14 @@ use PHPUnit\Framework\MockObject\Stub\Exception;
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        $this->illustrationSubscriptionTypes = ["Free", "Premium"];
+    }
+
     function makeControlOptions($user){
         return collect([
-            ['title' => 'Edit Calendar', 'href' => '/admin/calendar/'.$user->id],
+            ['title' => 'Edit Calendar', 'href' => '/admin/calendar/'.$user->id.'/1'],
             ['title' => 'Edit Illustrations', 'href' => '/admin/illustrations/'.$user->id.'/1'],
         ]);
     }
@@ -39,12 +44,13 @@ class AdminController extends Controller
         ]);
     }
 
-    public function calendar($user_id){
+    public function calendar($user_id, $page){
         $loggedInUser = $this->verifyUser($user_id);
         return view('admin.calendar', [
             'loggedInUser' => $loggedInUser,
             'requestedUser' => $loggedInUser,
             'options' => $this->makeControlOptions($loggedInUser),
+            'page' => $page,
         ]);
     }
 
@@ -432,6 +438,7 @@ class AdminController extends Controller
         $data = request()->validate([
             'title' => 'required',
             'svg' => 'required',
+            'type' => 'required',
             'illustration_catagory_id' => 'required',
         ]);
 
@@ -464,6 +471,14 @@ class AdminController extends Controller
                 ]);
             }
         }
+
+
+
+        \App\IllustrationSubscription::create([
+            'illustration_id' => $ill->id,
+            'type' => request()->get('type'),
+            'name' => $this->illustrationSubscriptionType[request()->get('type')],
+        ]);
 
         request()->session()->flash('success', 'Illustration has been created successfully');
         return back();
