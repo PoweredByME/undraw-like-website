@@ -196,4 +196,12 @@ body.no-scroll{
     }
 }
 
+@media(max-width:460px){
+    .search-input-container{
+        margin-right: 12px;
+        margin-left: 12px;
+    }
+
+}
+
 

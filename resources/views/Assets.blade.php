@@ -16,6 +16,8 @@
                             'right_menu' => false])
         @endcomponent()
 
+
+
         <section class=" ill-hero-section p-3 d-flex align-items-center justify-content-center" style="background:white !important">
                 <div class="ihs-container mb-1 text-black text-center">
                     <h3 style="letter-spacing: 2px">
@@ -37,15 +39,51 @@
                             </div>
                     </div>
                 </div>
+                <div class="p-2 mt-2">
+                    <div class="d-flex align-items-center justify-content-center">
+                            <button
+                            role="btn"
+                            v-for="cs in [
+                                {
+                                    id: 0,
+                                    color: '#BD281E F99B1D, 000000, 6EB3E7, F3C0C0'
+                                },
+                                {
+                                    id: 1,
+                                    color: '#F99B1D'
+                                },
+                                {
+                                    id: 2,
+                                    color: '#000000'
+                                },
+                                {
+                                    id: 3,
+                                    color: '#6EB3E7'
+                                },
+                                {
+                                    id: 4,
+                                    color: '#F3C0C0'
+                                }
+                            ]"
+                            :key="cs.id"
+                            :class='["color-btn mx-1 p-0", "search-edit-color-btn-" + cs.id]'
+                            @click="editColor(cs.color)"
+                            title=' Select this to edit the referenced elements of the Images'
+                        >
+                            <i  :class='["fa fa-circle"]' :style="{'color' : cs.color}"></i>
+                        </button>
+                    <div>
+                </div>
+
             </div>
         </section>
-
-
-
         <illustrations-component :search_in="search_in"></illustrations-component>
     </div>
 
     <script src="/js/saveSvgAsPng.js"></script>
+
+
+
 
     @component('Master.footerSmall')
     @endcomponent()

@@ -257,7 +257,7 @@ import { setTimeout } from 'timers';
                     this.selectedColorID_3[this.selectedColorIdx].color = newVal.hex8;
                     this.editSVG();
                 }
-            }
+            },
         },
     }
 </script>

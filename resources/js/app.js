@@ -56,6 +56,40 @@ const app = new Vue({
     el: '#app',
     data : {
         search_in:''
+    },
+    methods : {
+        editColor(i,color){
+            // This is for the coloring of the images via the button under the search bar.
+            // This has nothing to do with the code that is responsible for the coloring
+            // of the elements using the FAB at the bottom right corner.
+            var selectedColorID_1 = [
+                {ref : '.color-1', },
+                {ref : '.color-2', },
+                {ref : '.color-3', },
+                {ref : '.color-4', },
+                {ref : '.color-5', },
+            ];
+            var selectedColorID_2 = [
+                {ref : '.color_x5F_1', },
+                {ref : '.color_x5F_2', },
+                {ref : '.color_x5F_3', },
+                {ref : '.color_x5F_4', },
+                {ref : '.color_x5F_5', },
+            ];
+            var selectedColorID_3 = [
+                {ref : '.color_1', },
+                {ref : '.color_2', },
+                {ref : '.color_3', },
+                {ref : '.color_4', },
+                {ref : '.color_5', },
+            ];
+
+            for(var idx = 0; idx < 5; idx++){
+                $(selectedColorID_1[idx].ref).attr('fill', color);
+                $(selectedColorID_2[idx].ref).attr('fill', color);
+                $(selectedColorID_3[idx].ref).attr('fill', color);
+            }
+        }
     }
 });
 
