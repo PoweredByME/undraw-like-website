@@ -58,7 +58,7 @@ const app = new Vue({
         search_in:''
     },
     methods : {
-        editColor(i,color){
+        editColor(color){
             // This is for the coloring of the images via the button under the search bar.
             // This has nothing to do with the code that is responsible for the coloring
             // of the elements using the FAB at the bottom right corner.

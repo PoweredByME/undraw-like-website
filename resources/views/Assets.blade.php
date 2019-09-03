@@ -46,7 +46,7 @@
                             v-for="cs in [
                                 {
                                     id: 0,
-                                    color: '#BD281E F99B1D, 000000, 6EB3E7, F3C0C0'
+                                    color: '#BD281E'
                                 },
                                 {
                                     id: 1,
